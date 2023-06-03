@@ -137,7 +137,7 @@ class Othello:  # TODO: Check style guide lines for classes
         if piece_at_location == player_piece:
             return True
 
-        # Recursive case: We're still following the opponent's pieces
+        # Recursive case: We're following the trail of the opponent's pieces
         if piece_at_location == opponent_piece:
 
             if self.rec_flip_pieces(direction, player_piece, opponent_piece, row, column):

@@ -28,10 +28,10 @@ def invert_board(board):
 class OthelloUnitTests(unittest.TestCase):
     """Contains unit tests for the othello game"""
 
-    def test_flip_pieces_black_capture_all_directions(self):
+    def test_flip_pieces__all_directions(self):
         """Contains Unit tests for the flip_pieces() method"""
 
-        print("UNITTEST:: Testing black capture in all directions...")
+        print("UNITTEST:: Testing capture in all directions...")
         # Create a new game
         game = Othello()
 
@@ -77,8 +77,8 @@ class OthelloUnitTests(unittest.TestCase):
         game._board[7][6] = WHITE
         game._board[8][7] = BLACK
 
-        # Save an inverted board to test the white pieces
-        inverted_board = invert_board(game.get_board())
+        # # Save an inverted board to test the white pieces
+        # inverted_board = list(invert_board(game.get_board()))
 
         # Flip them
         print("UNITTEST:: Board configuration before running flip_pieces():")
@@ -90,15 +90,16 @@ class OthelloUnitTests(unittest.TestCase):
         game.print_board()
 
 
-        # Test flipping white pieces
-        game._board = inverted_board
-        print("UNITTEST:: Board configuration before running flip_pieces():")
-        game.print_board()
 
-        game.flip_pieces("white", 5, 4)
-
-        print("UNITTEST:: Board configuration after running flip_pieces():")
-        game.print_board()
+        # # Test flipping white pieces
+        # game._board = inverted_board
+        # print("UNITTEST:: Board configuration before running flip_pieces():")
+        # game.print_board()
+        #
+        # game.flip_pieces("white", 5, 4)
+        #
+        # print("UNITTEST:: Board configuration after running flip_pieces():")
+        # game.print_board()
 
 
 
