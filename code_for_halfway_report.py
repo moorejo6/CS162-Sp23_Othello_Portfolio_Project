@@ -113,7 +113,7 @@ class Othello:
 
         pass
 
-    def piece_locations(self, color):
+    def return_piece_locations(self, color):
         """Takes one parameter:
         color - The color to look for on the game board
 
