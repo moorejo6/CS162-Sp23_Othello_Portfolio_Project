@@ -123,7 +123,7 @@ class Othello:  # TODO: Check style guide lines for classes
         # Recursive case: We're following a trail of the opponent's pieces
         if value_at_adjacent_location == opponent_piece:
 
-            # If we eventually find the current player's piece, we should flip the value at adjacent the location
+            # If we eventually find the current player's piece, we should flip the value
             if self.rec_flip_pieces(direction, player_piece, opponent_piece, adjacent_row, adjacent_column):
                 self._board[adjacent_row][adjacent_column] = player_piece
                 return True
