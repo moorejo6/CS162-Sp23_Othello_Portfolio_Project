@@ -76,34 +76,97 @@ class OthelloUnitTests(unittest.TestCase):
         row_len = len(game.get_board())
         column_len = len(game.get_board()[0])
 
+        # Test edges of the board first. We need to test the corners separately
         for row in range(row_len):
             for column in range(column_len):
 
-                # If we're at the top edge of the board, all north-bound directions should be invalid
-                if row == 0:
+                # If we're at the top edge of the board, all north-bound directions should be invalid.
+                if row == 0 and (0 < column < 9):
                     self.assertEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
                     self.assertEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
                     self.assertEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
 
                 # If we're at the bottom edge of the board, all south-bound directions should be invalid
-                if row == 9:
-                    self.assertEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
+                if row == 9 and (0 < column < 9):
+                    self.assertNotEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
                     self.assertEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
+                    self.assertEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
                     self.assertEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
 
                 # If we're at the left edge of the board, all west-bound directions should be invalid
-                if column == 0:
-                    self.assertEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
+                if column == 0 and (0 < row < 9):
+                    self.assertNotEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
                     self.assertEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
+                    self.assertEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
                     self.assertEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
 
                 # If we're at the right edge of the board, all east-bound directions should be invalid
-                if column == 9:
+                if column == 9 and (0 < row < 9):
+                    self.assertNotEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
+                    self.assertEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
                     self.assertEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
                     self.assertEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
-                    self.assertEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
+                    self.assertNotEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
 
+        # Test NE corner
+        row, column = 0, 9
+        self.assertEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
+        self.assertNotEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
+        self.assertNotEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
+        self.assertNotEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
 
+        # Test SE corner
+        row, column = 9, 9
+        self.assertNotEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
+        self.assertNotEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
+        self.assertNotEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
+
+        # Test SW corner
+        row, column = 9, 0
+        self.assertNotEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
+        self.assertNotEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
+        self.assertNotEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
+
+        # Test NW corner
+        row, column = 0, 0
+        self.assertEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
+        self.assertNotEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
+        self.assertNotEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
+        self.assertNotEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
+        self.assertEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
 
 
 
