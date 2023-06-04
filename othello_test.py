@@ -12,18 +12,21 @@ WALL = "*"
 BLACK = "X"
 WHITE = "O"
 
+
 def invert_board(board):
     """Inverts the color of the pieces on the board. Used for testing configurations on both colors"""
 
+    new_board = list(board)
+
     for row in range(10):
         for column in range(10):
-            if board[row][column] == WHITE:
-                board[row][column] = BLACK
+            if new_board[row][column] == WHITE:
+                new_board[row][column] = BLACK
 
-            elif board[row][column] == BLACK:
-                board[row][column] = WHITE
+            elif new_board[row][column] == BLACK:
+                new_board[row][column] = WHITE
 
-    return board
+    return new_board
 
 class OthelloUnitTests(unittest.TestCase):
     """Contains unit tests for the othello game"""
@@ -40,7 +43,6 @@ class OthelloUnitTests(unittest.TestCase):
         game._board[4][5] = EMPTY
         game._board[5][5] = EMPTY
 
-
         # Add white pieces in all vertical directions
         game._board[1][4] = BLACK
         game._board[2][4] = WHITE
@@ -54,17 +56,17 @@ class OthelloUnitTests(unittest.TestCase):
         game._board[5][1] = BLACK
         game._board[5][2] = WHITE
         game._board[5][3] = WHITE
-        game._board[5][5] = WHITE
+        game._board[5][5] = BLACK  # CHANGED FOR TESTING
         game._board[5][6] = WHITE
         game._board[5][7] = WHITE
         game._board[5][8] = BLACK
 
         # Add white pieces in all positive diagonal directions
-        game._board[8][1] = BLACK
+        game._board[8][1] = WHITE  # CHANGED FOR TESTING
         game._board[7][2] = WHITE
         game._board[6][3] = WHITE
         game._board[4][5] = WHITE
-        game._board[3][6] = WHITE
+        game._board[3][6] = BLACK  # CHANGED FOR TESTING
         game._board[2][7] = WHITE
         game._board[1][8] = BLACK
 
@@ -77,8 +79,10 @@ class OthelloUnitTests(unittest.TestCase):
         game._board[7][6] = WHITE
         game._board[8][7] = BLACK
 
-        # # Save an inverted board to test the white pieces
-        # inverted_board = list(invert_board(game.get_board()))
+        # Save an inverted board to test the white pieces
+        # inverted_board = invert_board(game.get_board())
+        # print(type(inverted_board))
+        # print(type(game.get_board()))
 
         # Flip them
         print("UNITTEST:: Board configuration before running flip_pieces():")

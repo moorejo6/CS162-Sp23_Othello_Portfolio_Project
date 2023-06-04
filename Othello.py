@@ -54,7 +54,7 @@ class Othello:  # TODO: Check style guide lines for classes
         return self._board
 
     def print_board(self):
-        """TODO: ADD DOCSTRING"""
+        """Prints the current state of the Othello board. Returns nothing."""
 
         for row in range(len(self._board)):
             for column in range(len(self._board[row])):
@@ -72,12 +72,15 @@ class Othello:  # TODO: Check style guide lines for classes
         print("DEBUG:: in Othello.return_winner()")
 
 
+    # Finished first draft 6/2
     def flip_pieces(self, color, row, column):
         """TODO: ADD DOCSTRING"""
 
         player_piece = None
         opponent_piece = None
 
+        # Determine which pieces are the current player's piece and which are the opponent's pieces.
+        # I'm doing this here so it doesn't have to be done in each recursive call.
         if color.lower() == "black":
             player_piece = "X"
             opponent_piece = "O"
@@ -87,6 +90,7 @@ class Othello:  # TODO: Check style guide lines for classes
         else:
             print(f"ERROR:: Color {color} not recognized.")
 
+        # Check every cardinal direction for valid pieces to flip
         self.rec_flip_pieces("north", player_piece, opponent_piece, row, column)
         self.rec_flip_pieces("northeast", player_piece, opponent_piece, row, column)
         self.rec_flip_pieces("east", player_piece, opponent_piece, row, column)
@@ -96,9 +100,38 @@ class Othello:  # TODO: Check style guide lines for classes
         self.rec_flip_pieces("west", player_piece, opponent_piece, row, column)
         self.rec_flip_pieces("northwest", player_piece, opponent_piece, row, column)
 
-
+    # Finished first draft 6/2
     def rec_flip_pieces(self, direction, player_piece, opponent_piece, row, column):
         """TODO: ADD DOCSTRING"""
+
+        # Get the value of the adjacent space in the given direction
+        row, column = self.shift_coordinates(direction, row, column)
+        value_at_location = self._board[row][column]
+
+        # Base case 1: We hit a wall. No valid flips.
+        if value_at_location == "*":
+            return False
+
+        # Base case 2: We found an empty space. No valid flips
+        if value_at_location == ".":
+            return False
+
+        # Base case 3: We found the current player's piece.
+        #              This indicates that we should flip the pieces we passed over.
+        if value_at_location == player_piece:
+            return True
+
+        # Recursive case: We're following a trail of the opponent's pieces
+        if value_at_location == opponent_piece:
+
+            # If we eventually find the current player's piece, we should flip the piece at this location
+            if self.rec_flip_pieces(direction, player_piece, opponent_piece, row, column):
+                self._board[row][column] = player_piece
+                return True
+
+    # Finished first draft 6/3
+    def shift_coordinates(self, direction, row, column):
+        """Takes a row,column pair and returns an adjacent coordinate pair in the given direction"""
 
         if direction == "north":
             row -= 1
@@ -123,26 +156,32 @@ class Othello:  # TODO: Check style guide lines for classes
         else:
             print(f"ERROR:: Invalid direction {direction}")
 
-        piece_at_location = self._board[row][column]
+        return row, column
 
-        # Base case 1: We reach a wall. No valid flips.
-        if piece_at_location == "*":
-            return False
+    # Finished first draft 6/3
+    def return_piece_locations(self, color):
+        """TODO: ADD DOCSTRING"""
 
-        # Base case 2: We reach an empty space. No valid flips
-        if piece_at_location == ".":
-            return False
+        player_piece = None
+        piece_locations = []
 
-        # Base case 3: We reach the current player's piece. Return True
-        if piece_at_location == player_piece:
-            return True
+        if color.lower() == "black":
+            player_piece = "X"
+        elif color.lower() == "white":
+            player_piece = "O"
+        else:
+            print(f"ERROR:: Invalid color: {color}")
+            return -1
 
-        # Recursive case: We're following the trail of the opponent's pieces
-        if piece_at_location == opponent_piece:
+        number_of_rows = len(self._board)
+        number_of_columns = len(self._board[0])
 
-            if self.rec_flip_pieces(direction, player_piece, opponent_piece, row, column):
-                self._board[row][column] = player_piece
-                return True
+        for row in range(number_of_rows):
+            for column in range(number_of_columns):
+                if self._board[row][column] == player_piece:
+                    piece_locations.append([row, column])
+
+        return piece_locations
 
 
 def main():
@@ -154,19 +193,31 @@ def main():
     game._board[7][6] = "O"
     game._board[8][6] = "X"
 
-    game._board[5][1] ="X"
-    game._board[5][2] ="O"
-    game._board[5][3] ="O"
-    game._board[5][4] ="O"
+    game._board[5][1] = "X"
+    game._board[5][2] = "O"
+    game._board[5][3] = "O"
+    game._board[5][4] = "O"
     game._board[4][6] = "O"
     game._board[3][6] = "X"
 
     game.print_board()
+
+    white_locations = game.return_piece_locations("white")
+    black_locations = game.return_piece_locations("black")
+    print(f"DEBUG:: White has {len(white_locations)} pieces at: {white_locations}")
+    print(f"DEBUG:: Black has {len(black_locations)} pieces at: {black_locations}")
+
     game._board[5][6] = "X"
     game.flip_pieces("black", 5, 6)
     # game.rec_flip_test("black", "south", 5, 6)
     # game.rec_flip_test("black", "west", 5, 6)
     game.print_board()
+
+    white_locations = game.return_piece_locations("white")
+    black_locations = game.return_piece_locations("black")
+    print(f"DEBUG:: White has {len(white_locations)} pieces at: {white_locations}")
+    print(f"DEBUG:: Black has {len(black_locations)} pieces at: {black_locations}")
+
 
 
 if __name__ == "__main__":
