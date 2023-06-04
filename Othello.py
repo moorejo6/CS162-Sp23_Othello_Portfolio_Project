@@ -71,7 +71,6 @@ class Othello:  # TODO: Check style guide lines for classes
 
         print("DEBUG:: in Othello.return_winner()")
 
-
     # Finished first draft 6/2
     def flip_pieces(self, color, row, column):
         """TODO: ADD DOCSTRING"""
@@ -90,7 +89,7 @@ class Othello:  # TODO: Check style guide lines for classes
         else:
             print(f"ERROR:: Color {color} not recognized.")
 
-        # Check every cardinal direction for valid pieces to flip
+        # Check every direction for valid pieces to flip
         self.rec_flip_pieces("north", player_piece, opponent_piece, row, column)
         self.rec_flip_pieces("northeast", player_piece, opponent_piece, row, column)
         self.rec_flip_pieces("east", player_piece, opponent_piece, row, column)
@@ -105,28 +104,28 @@ class Othello:  # TODO: Check style guide lines for classes
         """TODO: ADD DOCSTRING"""
 
         # Get the value of the adjacent space in the given direction
-        row, column = self.shift_coordinates(direction, row, column)
-        value_at_location = self._board[row][column]
+        adjacent_row, adjacent_column = self.shift_coordinates(direction, row, column)
+        value_at_adjacent_location = self._board[adjacent_row][adjacent_column]
 
         # Base case 1: We hit a wall. No valid flips.
-        if value_at_location == "*":
+        if value_at_adjacent_location == "*":
             return False
 
         # Base case 2: We found an empty space. No valid flips
-        if value_at_location == ".":
+        if value_at_adjacent_location == ".":
             return False
 
         # Base case 3: We found the current player's piece.
         #              This indicates that we should flip the pieces we passed over.
-        if value_at_location == player_piece:
+        if value_at_adjacent_location == player_piece:
             return True
 
         # Recursive case: We're following a trail of the opponent's pieces
-        if value_at_location == opponent_piece:
+        if value_at_adjacent_location == opponent_piece:
 
-            # If we eventually find the current player's piece, we should flip the piece at this location
-            if self.rec_flip_pieces(direction, player_piece, opponent_piece, row, column):
-                self._board[row][column] = player_piece
+            # If we eventually find the current player's piece, we should flip the value at adjacent the location
+            if self.rec_flip_pieces(direction, player_piece, opponent_piece, adjacent_row, adjacent_column):
+                self._board[adjacent_row][adjacent_column] = player_piece
                 return True
 
     # Finished first draft 6/3
