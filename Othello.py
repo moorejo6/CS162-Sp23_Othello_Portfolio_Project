@@ -71,15 +71,18 @@ class Othello:  # TODO: Check style guide lines for classes
 
         print("DEBUG:: in Othello.return_winner()")
 
-    # Finished first draft 6/2
-    def flip_pieces(self, color, row, column):
-        """TODO: ADD DOCSTRING"""
+    # Finished first draft 6/4. Unit Tests implemented 6/4
+    def color_to_piece(self, color):
+        """Takes one parameter:
+        color - The color of the current players piece
+
+        Purpose: Translates the player color into strings that represent the player and opponent's pieces.
+
+        Returns two strings: one of the current player's pieces and another representing the opponent's pieces """
 
         player_piece = None
         opponent_piece = None
 
-        # Determine which pieces are the current player's piece and which are the opponent's pieces.
-        # I'm doing this here so it doesn't have to be done in each recursive call.
         if color.lower() == "black":
             player_piece = "X"
             opponent_piece = "O"
@@ -87,7 +90,22 @@ class Othello:  # TODO: Check style guide lines for classes
             player_piece = "O"
             opponent_piece = "X"
         else:
-            print(f"ERROR:: Color {color} not recognized.")
+            print(f"ERROR in Othello.color_to_piece:: Invalid color: {color}")
+
+        return player_piece, opponent_piece
+
+    # Finished first draft 6/2
+    def flip_pieces(self, color, row, column):
+        """Takes three parameters:
+        color - The color of the current players pieces
+        row, column - the row,column coordinate pair for the staring location.
+
+        Purpose: Starting from the given coordinate pair, this method will check for and perform valid flip moves in
+        all 8 cardinal directions
+
+        Returns: nothing"""
+
+        player_piece, opponent_piece = self.color_to_piece(color)
 
         # Check every direction for valid pieces to flip
         self.rec_flip_pieces("north", player_piece, opponent_piece, row, column)
@@ -104,7 +122,7 @@ class Othello:  # TODO: Check style guide lines for classes
         """TODO: ADD DOCSTRING"""
 
         # Get the value of the adjacent space in the given direction
-        adjacent_row, adjacent_column = self.shift_coordinates(direction, row, column)
+        adjacent_row, adjacent_column = self.return_adjacent_coordinate(direction, row, column)
         value_at_adjacent_location = self._board[adjacent_row][adjacent_column]
 
         # Base case 1: We hit a wall. No valid flips.
@@ -129,33 +147,49 @@ class Othello:  # TODO: Check style guide lines for classes
                 return True
 
     # Finished first draft 6/3
-    def shift_coordinates(self, direction, row, column):
+    def return_adjacent_coordinate(self, direction, row, column):
         """Takes a row,column pair and returns an adjacent coordinate pair in the given direction"""
 
-        if direction == "north":
-            row -= 1
-        elif direction == "northeast":
-            row -= 1
-            column += 1
-        elif direction == "east":
-            column += 1
-        elif direction == "southeast":
-            row += 1
-            column += 1
-        elif direction == "south":
-            row += 1
-        elif direction == "southwest":
-            row += 1
-            column -= 1
-        elif direction == "west":
-            column -= 1
-        elif direction == "northwest":
-            row -= 1
-            column -= 1
-        else:
-            print(f"ERROR:: Invalid direction {direction}")
+        new_row = -1
+        new_column = -1
 
-        return row, column
+        if direction == "north":
+            new_row = row - 1
+            new_column = column
+        elif direction == "northeast":
+            new_row = row - 1
+            new_column = column + 1
+        elif direction == "east":
+            new_row = row
+            new_column = column + 1
+        elif direction == "southeast":
+            new_row = row + 1
+            new_column = column + 1
+        elif direction == "south":
+            new_row = row + 1
+            new_column = column
+        elif direction == "southwest":
+            new_row = row + 1
+            new_column = column - 1
+        elif direction == "west":
+            new_row = row
+            new_column = column - 1
+        elif direction == "northwest":
+            new_row = row - 1
+            new_column = column - 1
+        else:
+            print(f"ERROR in return_adjacent_coordinate:: Invalid direction: {direction}")
+            return "invalid"
+
+        if new_row < 0 or new_row > 9:
+            print(f"ERROR in return_adjacent_coordinate:: Invalid new_row ({new_row}) in direction {direction}")
+            return "invalid"
+
+        if new_column < 0 or new_column > 9:
+            print(f"ERROR in return_adjacent_coordinate:: Invalid new_column ({new_column}) in direction {direction}")
+            return "invalid"
+
+        return new_row, new_column
 
     # Finished first draft 6/3
     def return_piece_locations(self, color):
