@@ -48,6 +48,8 @@ class Othello:  # TODO: Check style guide lines for classes
 
     def __init__(self):
         self._board = generate_board()
+        self._direction_list = ["north", "northeast", "east", "southeast",
+                                "south", "southwest", "west", "northwest"]
 
     def get_board(self):
         """Returns the current game board"""
@@ -108,14 +110,16 @@ class Othello:  # TODO: Check style guide lines for classes
         player_piece, opponent_piece = self.color_to_piece(color)
 
         # Check every direction for valid pieces to flip
-        self.rec_flip_pieces("north", player_piece, opponent_piece, row, column)
-        self.rec_flip_pieces("northeast", player_piece, opponent_piece, row, column)
-        self.rec_flip_pieces("east", player_piece, opponent_piece, row, column)
-        self.rec_flip_pieces("southeast", player_piece, opponent_piece, row, column)
-        self.rec_flip_pieces("south", player_piece, opponent_piece, row, column)
-        self.rec_flip_pieces("southwest", player_piece, opponent_piece, row, column)
-        self.rec_flip_pieces("west", player_piece, opponent_piece, row, column)
-        self.rec_flip_pieces("northwest", player_piece, opponent_piece, row, column)
+        for direction in self._direction_list:
+            self.rec_flip_pieces(direction, player_piece, opponent_piece, row, column)
+        # self.rec_flip_pieces("north", player_piece, opponent_piece, row, column)
+        # self.rec_flip_pieces("northeast", player_piece, opponent_piece, row, column)
+        # self.rec_flip_pieces("east", player_piece, opponent_piece, row, column)
+        # self.rec_flip_pieces("southeast", player_piece, opponent_piece, row, column)
+        # self.rec_flip_pieces("south", player_piece, opponent_piece, row, column)
+        # self.rec_flip_pieces("southwest", player_piece, opponent_piece, row, column)
+        # self.rec_flip_pieces("west", player_piece, opponent_piece, row, column)
+        # self.rec_flip_pieces("northwest", player_piece, opponent_piece, row, column)
 
     # Finished first draft 6/2
     def rec_flip_pieces(self, direction, player_piece, opponent_piece, row, column):
