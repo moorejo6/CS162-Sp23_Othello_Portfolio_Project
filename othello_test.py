@@ -135,7 +135,47 @@ class OthelloUnitTests(unittest.TestCase):
             else:
                 self.assertEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
 
-    def test_flip_pieces__all_directions(self):
+    def test_return_piece_locations(self):
+        """Tests the return_piece_locations() method"""
+
+        game = Othello()
+
+        # Test on starting board configuration
+        test1_black_start = game.return_piece_locations("black")
+        test2_white_start = game.return_piece_locations("white")
+        test1_answer = [[4, 5], [5, 4]]
+        test2_answer = [[4, 4], [5, 5]]
+
+        self.assertEqual(test1_black_start, test1_answer)
+        self.assertEqual(test2_white_start, test2_answer)
+
+        # Add some more pieces to the board
+        game._board[1][1] = BLACK
+        game._board[2][4] = BLACK
+        game._board[3][6] = BLACK
+        game._board[4][8] = BLACK
+        test3_scattered_black_pieces = game.return_piece_locations("black")
+        test3_answer = [[1, 1], [2, 4], [3, 6], [4, 5], [4, 8], [5, 4]]
+
+        game._board[8][1] = WHITE
+        game._board[7][6] = WHITE
+        game._board[6][2] = WHITE
+        game._board[5][7] = WHITE
+        test4_scattered_white_pieces = game.return_piece_locations("white")
+        test4_answer = [[4, 4], [5, 5], [5, 7], [6, 2], [7, 6], [8, 1]]
+
+        # Test results
+        self.assertEqual(test3_scattered_black_pieces, test3_answer)
+        self.assertEqual(test4_scattered_white_pieces, test4_answer)
+
+    def test_return_available_positions(self):
+        """Contains unit tests for the return_available_positions() method"""
+
+
+
+
+
+    def test_flip_pieces_all_directions(self):
         """Contains Unit tests for the flip_pieces() method"""
 
         print("UNITTEST:: Testing capture in all directions...")

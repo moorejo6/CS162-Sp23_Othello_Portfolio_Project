@@ -192,8 +192,8 @@ class Othello:  # TODO: Check style guide lines for classes
             return "invalid"
 
         if new_row < 0 or new_row > 9 or new_column < 0 or new_column > 9:
-            print(f"ERROR in Othello.return_adjacent_coordinate:: "
-                  f"Invalid coordinate pair ({new_row}, {new_column}) in {direction} direction")
+            # print(f"ERROR in Othello.return_adjacent_coordinate:: "
+            #       f"Invalid coordinate pair ({new_row}, {new_column}) {direction} of ({row}, {column}")
             return "invalid"
 
         return new_row, new_column
@@ -233,18 +233,21 @@ class Othello:  # TODO: Check style guide lines for classes
         """TODO: ADD DOCSTRING"""
 
         player_piece, opponent_piece = self.color_to_piece(color)
-        player_position_list = self.return_piece_locations(color)
+        player_token_locations = self.return_piece_locations(color)
         valid_move_list = []
 
-        for position in player_position_list:
-            print(f"DEBUG:: position[0]: {position[0]}, position[1]: {position[1]}")
+        # For every token the player has on the board, search all directions around the token for available moves
+        for token in player_token_locations:
             for direction in self._direction_list:
-                adjacent_row, adjacent_column = self.return_adjacent_coordinate(direction, position[0], position[1])
+
+                adjacent_row, adjacent_column = self.return_adjacent_coordinate(direction, token[0], token[1])
                 value_at_adjacent_location = self._board[adjacent_row][adjacent_column]
 
                 if value_at_adjacent_location == opponent_piece:
-                    possible_move = self.rec_return_available_positions(direction, player_piece, opponent_piece, position[0], position[1])
-                    if possible_move is not None:
+                    # TODO: CAN ADJACENT_ROW AND ADJACENT_COLUMN REPLACE TOKEN[0] AND TOKEN[1]
+                    possible_move = self.rec_return_available_positions(direction, player_piece, opponent_piece, token[0], token[1])
+
+                    if possible_move is not None and possible_move not in valid_move_list:
                         valid_move_list.append(possible_move)
 
         return valid_move_list
