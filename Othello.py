@@ -141,40 +141,50 @@ class Othello:  # TODO: Check style guide lines for classes
         # Recursive case: We're following a trail of the opponent's pieces
         if value_at_adjacent_location == opponent_piece:
 
-            # If we eventually find the current player's piece, we should flip the value
+            # If we eventually find the current player's piece, we should flip the value on the board
             if self.rec_flip_pieces(direction, player_piece, opponent_piece, adjacent_row, adjacent_column):
                 self._board[adjacent_row][adjacent_column] = player_piece
                 return True
+            else:
+                return False
 
-    # Finished first draft 6/3
+    # Finished first draft 6/3. Finished unit tests 6/4
     def return_adjacent_coordinate(self, direction, row, column):
-        """Takes a row,column pair and returns an adjacent coordinate pair in the given direction"""
+        """Takes three parameters:
+        direction - the direction to travel from the starting location
+        row, column - The row,column coordinate pair for the starting location
+
+        Purpose: Takes a row,column pair and returns an adjacent coordinate pair in the given direction
+
+        Returns:
+            If the adjacent coordinates are within the game board, returns the adjacent coordinates.
+            If the adjacent coordinates are in an invalid position, returns the string 'invalid' """
 
         new_row = -1
         new_column = -1
 
-        if direction == "north":
+        if direction.lower() == "north":
             new_row = row - 1
             new_column = column
-        elif direction == "northeast":
+        elif direction.lower() == "northeast":
             new_row = row - 1
             new_column = column + 1
-        elif direction == "east":
+        elif direction.lower() == "east":
             new_row = row
             new_column = column + 1
-        elif direction == "southeast":
+        elif direction.lower() == "southeast":
             new_row = row + 1
             new_column = column + 1
-        elif direction == "south":
+        elif direction.lower() == "south":
             new_row = row + 1
             new_column = column
-        elif direction == "southwest":
+        elif direction.lower() == "southwest":
             new_row = row + 1
             new_column = column - 1
-        elif direction == "west":
+        elif direction.lower() == "west":
             new_row = row
             new_column = column - 1
-        elif direction == "northwest":
+        elif direction.lower() == "northwest":
             new_row = row - 1
             new_column = column - 1
         else:
@@ -216,8 +226,8 @@ class Othello:  # TODO: Check style guide lines for classes
 
         return piece_locations
 
-
-def main():
+def misc_tests():
+    """FOR DEBUG USE ONLY! TODO: DELETE BEFORE SUBMISSION"""
     game = Othello()
     game.print_board()
 
@@ -251,6 +261,30 @@ def main():
     print(f"DEBUG:: White has {len(white_locations)} pieces at: {white_locations}")
     print(f"DEBUG:: Black has {len(black_locations)} pieces at: {black_locations}")
 
+def test_game_loop():
+    """FOR DEBUG USE ONLY! TODO: DELETE BEFORE SUBMISSION!"""
+
+    game = Othello()
+    user_input = ""
+    current_player = "black"
+
+    while user_input != "q":
+        game.print_board()
+        player_piece, opponent_piece = game.color_to_piece(current_player)
+        player_row = int(input(f"{current_player}'s turn. What row do you want to move to? "))
+        player_column = int(input("What column do you want to move to? "))
+
+        game._board[player_row][player_column] = player_piece
+        game.flip_pieces(current_player, player_row, player_column)
+
+        if current_player == "black":
+            current_player = "white"
+        else:
+            current_player = "black"
+
+
+def main():
+    test_game_loop()
 
 
 if __name__ == "__main__":
