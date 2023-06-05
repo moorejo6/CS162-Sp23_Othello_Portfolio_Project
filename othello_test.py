@@ -52,124 +52,88 @@ class OthelloUnitTests(unittest.TestCase):
 
         game = Othello()
 
-        # Test basic functionality at center of board
-        north_test = game.return_adjacent_coordinate("north", 5, 5)
-        northeast_test = game.return_adjacent_coordinate("northeast", 5, 5)
-        east_test = game.return_adjacent_coordinate("east", 5, 5)
-        southeast_test = game.return_adjacent_coordinate("southeast", 5, 5)
-        south_test = game.return_adjacent_coordinate("south", 5, 5)
-        southwest_test = game.return_adjacent_coordinate("southwest", 5, 5)
-        west_test = game.return_adjacent_coordinate("west", 5, 5)
-        northwest_test = game.return_adjacent_coordinate("northwest", 5, 5)
+        # Test basic functionality at center of board and verify output
+        self.assertTrue(game.return_adjacent_coordinate("north", 5, 5), (4, 5))
+        self.assertTrue(game.return_adjacent_coordinate("northeast", 5, 5), (4, 6))
+        self.assertTrue(game.return_adjacent_coordinate("east", 5, 5), (5, 6))
+        self.assertTrue(game.return_adjacent_coordinate("southeast", 5, 5), (6, 6))
+        self.assertTrue(game.return_adjacent_coordinate("south", 5, 5), (6, 5))
+        self.assertTrue(game.return_adjacent_coordinate("southwest", 5, 5), (6, 4))
+        self.assertTrue(game.return_adjacent_coordinate("west", 5, 5), (5, 4))
+        self.assertTrue(game.return_adjacent_coordinate("northwest", 5, 5), (4, 4))
 
-        # Verify output
-        self.assertTrue(north_test, (4, 5))
-        self.assertTrue(northeast_test, (4, 6))
-        self.assertTrue(east_test, (5, 6))
-        self.assertTrue(southeast_test, (6, 6))
-        self.assertTrue(south_test, (6, 5))
-        self.assertTrue(southwest_test, (6, 4))
-        self.assertTrue(west_test, (5, 4))
-        self.assertTrue(northwest_test, (4, 4))
+        # Test edge cases (literally) to make sure "invalid" is returned correctly
+        # Test the edges of the board first. We need to test the corners separately
+        for row in range(len(game.get_board())):
+            for column in range(len(game.get_board()[0])):
 
-        # Test edge cases (literally)
-        row_len = len(game.get_board())
-        column_len = len(game.get_board()[0])
-
-        # Test edges of the board first. We need to test the corners separately
-        for row in range(row_len):
-            for column in range(column_len):
-
-                # If we're at the top edge of the board, all north-bound directions should be invalid.
+                # If we're at the top edge of the board, all northward directions should be invalid.
                 if row == 0 and (0 < column < 9):
-                    self.assertEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
-                    self.assertEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
-                    self.assertEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
+                    for direction in game.get_direction_list():
+                        if direction == "north" or direction == "northeast" or direction == "northwest":
+                            self.assertEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
+                        else:
+                            self.assertNotEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
 
-                # If we're at the bottom edge of the board, all south-bound directions should be invalid
+                # If we're at the bottom edge of the board, all southward directions should be invalid
                 if row == 9 and (0 < column < 9):
-                    self.assertNotEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
-                    self.assertEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
-                    self.assertEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
-                    self.assertEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
+                    for direction in game.get_direction_list():
+                        if direction == "south" or direction == "southeast" or direction == "southwest":
+                            self.assertEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
+                        else:
+                            self.assertNotEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
 
-                # If we're at the left edge of the board, all west-bound directions should be invalid
+                # If we're at the left edge of the board, all westward directions should be invalid
                 if column == 0 and (0 < row < 9):
-                    self.assertNotEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
-                    self.assertEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
-                    self.assertEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
-                    self.assertEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
+                    for direction in game.get_direction_list():
+                        if direction == "west" or direction == "southwest" or direction == "northwest":
+                            self.assertEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
+                        else:
+                            self.assertNotEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
 
-                # If we're at the right edge of the board, all east-bound directions should be invalid
+                # If we're at the right edge of the board, all eastward directions should be invalid
                 if column == 9 and (0 < row < 9):
-                    self.assertNotEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
-                    self.assertEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
-                    self.assertEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
-                    self.assertEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
-                    self.assertNotEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
+                    for direction in game.get_direction_list():
+                        if direction == "east" or direction == "southeast" or direction == "northeast":
+                            self.assertEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
+                        else:
+                            self.assertNotEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
 
         # Test NE corner
         row, column = 0, 9
-        self.assertEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
-        self.assertNotEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
-        self.assertNotEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
-        self.assertNotEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
+        for direction in game.get_direction_list():
+            # The only valid spaces should be to the south, southwest, and west
+            if direction == "south" or direction == "southwest" or direction == "west":
+                self.assertNotEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
+            else:
+                self.assertEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
 
         # Test SE corner
         row, column = 9, 9
-        self.assertNotEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
-        self.assertNotEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
-        self.assertNotEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
+        for direction in game.get_direction_list():
+            # The only valid spaces should be to the north, northwest, and west
+            if direction == "north" or direction == "northwest" or direction == "west":
+                self.assertNotEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
+            else:
+                self.assertEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
 
         # Test SW corner
         row, column = 9, 0
-        self.assertNotEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
-        self.assertNotEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
-        self.assertNotEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
+        for direction in game.get_direction_list():
+            # The only valid spaces should be to the north, northeast, and east
+            if direction == "north" or direction == "northeast" or direction == "east":
+                self.assertNotEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
+            else:
+                self.assertEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
 
         # Test NW corner
         row, column = 0, 0
-        self.assertEqual(game.return_adjacent_coordinate("north", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("northeast", row, column), "invalid")
-        self.assertNotEqual(game.return_adjacent_coordinate("east", row, column), "invalid")
-        self.assertNotEqual(game.return_adjacent_coordinate("southeast", row, column), "invalid")
-        self.assertNotEqual(game.return_adjacent_coordinate("south", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("southwest", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("west", row, column), "invalid")
-        self.assertEqual(game.return_adjacent_coordinate("northwest", row, column), "invalid")
-
-
-
+        for direction in game.get_direction_list():
+            # The only valid spaces should be to the south, southeast, and east
+            if direction == "south" or direction == "southeast" or direction == "east":
+                self.assertNotEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
+            else:
+                self.assertEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
 
 
     def test_flip_pieces__all_directions(self):

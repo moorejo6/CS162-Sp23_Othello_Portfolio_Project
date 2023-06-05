@@ -55,6 +55,10 @@ class Othello:  # TODO: Check style guide lines for classes
         """Returns the current game board"""
         return self._board
 
+    def get_direction_list(self):
+        """Returns the direction list"""
+        return self._direction_list
+
     def print_board(self):
         """Prints the current state of the Othello board. Returns nothing."""
 
@@ -196,11 +200,11 @@ class Othello:  # TODO: Check style guide lines for classes
             return "invalid"
 
         if new_row < 0 or new_row > 9:
-            print(f"ERROR in return_adjacent_coordinate:: Invalid new_row ({new_row}) in direction {direction}")
+            # print(f"ERROR in return_adjacent_coordinate:: Invalid new_row ({new_row}) in direction {direction}")
             return "invalid"
 
         if new_column < 0 or new_column > 9:
-            print(f"ERROR in return_adjacent_coordinate:: Invalid new_column ({new_column}) in direction {direction}")
+            # print(f"ERROR in return_adjacent_coordinate:: Invalid new_column ({new_column}) in direction {direction}")
             return "invalid"
 
         return new_row, new_column
