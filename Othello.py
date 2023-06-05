@@ -203,7 +203,13 @@ class Othello:  # TODO: Check style guide lines for classes
 
     # Finished first draft 6/3
     def return_piece_locations(self, color):
-        """TODO: ADD DOCSTRING"""
+        """Takes one parameter:
+                color - The color to look for on the game board
+
+                Purpose: Creates a list of all coordinate locations on the game board that contain a given color piece.
+                This provides the starting locations for the return_available_positions() method.
+
+                Returns: A list that contains the coordinate location of every piece of the given color."""
 
         player_piece = None
         piece_locations = []
@@ -225,6 +231,11 @@ class Othello:  # TODO: Check style guide lines for classes
                     piece_locations.append([row, column])
 
         return piece_locations
+
+    def return_available_positions(self, color):
+        """TODO: ADD DOCSTRING"""
+
+        print(f"DEBUG:: in return_available_positions")
 
 def misc_tests():
     """FOR DEBUG USE ONLY! TODO: DELETE BEFORE SUBMISSION"""
