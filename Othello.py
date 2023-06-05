@@ -243,7 +243,9 @@ class Othello:  # TODO: Check style guide lines for classes
                 value_at_adjacent_location = self._board[adjacent_row][adjacent_column]
 
                 if value_at_adjacent_location == opponent_piece:
-                    valid_move_list.append(self.rec_return_available_positions(direction, player_piece, opponent_piece, position[0], position[1]))
+                    possible_move = self.rec_return_available_positions(direction, player_piece, opponent_piece, position[0], position[1])
+                    if possible_move is not None:
+                        valid_move_list.append(possible_move)
 
         return valid_move_list
 
@@ -256,7 +258,7 @@ class Othello:  # TODO: Check style guide lines for classes
 
         # Base case 1: We hit a wall. Not a valid move.
         if value_at_adjacent_location == "*":
-            return []
+            return None
 
         # Base case 2: We found an empty space. This indicates a valid position.
         if value_at_adjacent_location == ".":
@@ -264,7 +266,7 @@ class Othello:  # TODO: Check style guide lines for classes
 
         # Base case 3: We found the current player's piece. Not a valid move
         if value_at_adjacent_location == player_piece:
-            return []
+            return None
 
         # Recursive case: We're following a trail of the opponent's pieces
         if value_at_adjacent_location == opponent_piece:
@@ -309,13 +311,29 @@ def test_game_loop():
     """FOR DEBUG USE ONLY! TODO: DELETE BEFORE SUBMISSION!"""
 
     game = Othello()
+    board_row_length = len(game.get_board())
+    board_column_length = len(game.get_board()[0])
     user_input = ""
     current_player = "black"
 
-    while user_input != "q":
-        game.print_board()
+    while True:
+        # game.print_board()
+
         player_piece, opponent_piece = game.color_to_piece(current_player)
+        valid_moves = game.return_available_positions(current_player)
+
+        if valid_moves != []:
+            for move in valid_moves:
+                game._board[move[0]][move[1]] = "="
+        game.print_board()
+
+        for row in range(board_row_length):
+            for column in range(board_column_length):
+                if game._board[row][column] == "=":
+                    game._board[row][column] = "."
+
         print(f"{current_player} pieces at: {game.return_piece_locations(current_player)}")
+        print(f"Valid moves are at: {valid_moves}")
         player_row = int(input(f"{current_player}'s turn. What row do you want to move to? "))
         player_column = int(input("What column do you want to move to? "))
 
@@ -329,15 +347,16 @@ def test_game_loop():
 
 
 def main():
-    # test_game_loop()
-    game = Othello()
-    game.print_board()
-    valid_moves = game.return_available_positions("black")
-    print(game.return_piece_locations("black"))
-    for move in valid_moves:
-        game._board[move[0]][move[1]] = "="
-    game.print_board()
-    print(f"DEBUG:: Valid moves are: {valid_moves}")
+    test_game_loop()
+
+    # game = Othello()
+    # game.print_board()
+    # valid_moves = game.return_available_positions("black")
+    # print(game.return_piece_locations("black"))
+    # for move in valid_moves:
+    #     game._board[move[0]][move[1]] = "="
+    # game.print_board()
+    # print(f"DEBUG:: Valid moves are: {valid_moves}")
 
 
 if __name__ == "__main__":
