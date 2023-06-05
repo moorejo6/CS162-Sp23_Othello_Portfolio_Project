@@ -135,7 +135,6 @@ class OthelloUnitTests(unittest.TestCase):
             else:
                 self.assertEqual(game.return_adjacent_coordinate(direction, row, column), "invalid")
 
-
     def test_flip_pieces__all_directions(self):
         """Contains Unit tests for the flip_pieces() method"""
 
@@ -209,7 +208,3 @@ class OthelloUnitTests(unittest.TestCase):
         #
         # print("UNITTEST:: Board configuration after running flip_pieces():")
         # game.print_board()
-
-
-
-
