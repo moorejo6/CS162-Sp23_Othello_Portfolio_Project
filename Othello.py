@@ -4,11 +4,21 @@
 # Description: TODO: ADD DESCRIPTION
 # ---------------------------------------------------------------------------------------------------------------------------
 
-def generate_board():
-    """Returns an Othello board with initial black and white pieces set"""
+def generate_board(black_token_locations=None, white_token_locations=None):
+    """Returns an Othello board with black and white tokens placed at the provided coordinates. If no coordinates are given,
+    pieces are placed at their starting location"""
 
     board = []
 
+    # If no black token locations were passed into the function, use the starting token locations
+    if black_token_locations is None:
+        black_token_locations = [[4, 5], [5, 4]]
+
+    # If no white token locations were passed into the function, use the starting token locations
+    if white_token_locations is None:
+        white_token_locations = [[4, 4], [5, 5]]
+
+    # Generate the borders and empty spaces of the board
     for row in range(10):
         board_row = []
         for column in range(10):
@@ -16,13 +26,15 @@ def generate_board():
                 board_row.append("*")
             else:
                 board_row.append(".")
-
         board.append(board_row)
 
-    board[4][4] = "O"
-    board[5][5] = "O"
-    board[4][5] = "X"
-    board[5][4] = "X"
+    # Place the black tokens on the board
+    for token in black_token_locations:
+        board[token[0]][token[1]] = "X"
+
+    # Place the white tokens on the board
+    for token in white_token_locations:
+        board[token[0]][token[1]] = "O"
 
     return board
 
@@ -201,12 +213,12 @@ class Othello:  # TODO: Check style guide lines for classes
     # Finished first draft 6/3
     def return_piece_locations(self, color):
         """Takes one parameter:
-                color - The color to look for on the game board
+        color - The color to look for on the game board
 
-                Purpose: Creates a list of all coordinate locations on the game board that contain a given color piece.
-                This provides the starting locations for the return_available_positions() method.
+        Purpose: Creates a list of all coordinate locations on the game board that contain a given color piece.
+        This provides the starting locations for the return_available_positions() method.
 
-                Returns: A list that contains the coordinate location of every piece of the given color."""
+        Returns: A list that contains the coordinate location of every piece of the given color."""
 
         player_piece = None
         piece_locations = []
@@ -263,7 +275,7 @@ class Othello:  # TODO: Check style guide lines for classes
         if value_at_adjacent_location == "*":
             return None
 
-        # Base case 2: We found an empty space. This indicates a valid position.
+        # Base case 2: We found an empty space. This indicates a valid position to move.
         if value_at_adjacent_location == ".":
             return [adjacent_row, adjacent_column]
 
@@ -274,6 +286,7 @@ class Othello:  # TODO: Check style guide lines for classes
         # Recursive case: We're following a trail of the opponent's pieces
         if value_at_adjacent_location == opponent_piece:
             return self.rec_return_available_positions(direction, player_piece, opponent_piece, adjacent_row, adjacent_column)
+
 
 def misc_tests():
     """FOR DEBUG USE ONLY! TODO: DELETE BEFORE SUBMISSION"""
@@ -310,6 +323,7 @@ def misc_tests():
     print(f"DEBUG:: White has {len(white_locations)} pieces at: {white_locations}")
     print(f"DEBUG:: Black has {len(black_locations)} pieces at: {black_locations}")
 
+
 def test_game_loop():
     """FOR DEBUG USE ONLY! TODO: DELETE BEFORE SUBMISSION!"""
 
@@ -335,10 +349,23 @@ def test_game_loop():
                 if game._board[row][column] == "=":
                     game._board[row][column] = "."
 
-        print(f"{current_player} pieces at: {game.return_piece_locations(current_player)}")
-        print(f"Valid moves are at: {valid_moves}")
-        player_row = int(input(f"{current_player}'s turn. What row do you want to move to? "))
-        player_column = int(input("What column do you want to move to? "))
+        print(f"{current_player} has {len(game.return_piece_locations(current_player))} tokens on the board")
+        print(f"{len(valid_moves)} moves are available: {valid_moves}")
+
+        valid_move = False
+
+        player_row = None
+        player_column = None
+
+        while not valid_move:
+            player_row = int(input(f"{current_player}'s turn. What row do you want to move to? "))
+            player_column = int(input("What column do you want to move to? "))
+
+            if [player_row, player_column] in valid_moves:
+                valid_move = True
+            else:
+                print(f"({player_row}, {player_column}) is an invalid move. Valid moves are:")
+                print(valid_moves)
 
         game._board[player_row][player_column] = player_piece
         game.flip_pieces(current_player, player_row, player_column)

@@ -62,7 +62,7 @@ class OthelloUnitTests(unittest.TestCase):
         self.assertTrue(game.return_adjacent_coordinate("west", 5, 5), (5, 4))
         self.assertTrue(game.return_adjacent_coordinate("northwest", 5, 5), (4, 4))
 
-        # Test edge cases (literally) to make sure "invalid" is returned correctly
+        # Test edge cases (literally) to make sure "invalid" is returned correctly.
         # Test the edges of the board first. We need to test the corners separately
         for row in range(len(game.get_board())):
             for column in range(len(game.get_board()[0])):
@@ -168,83 +168,44 @@ class OthelloUnitTests(unittest.TestCase):
         self.assertEqual(test3_scattered_black_pieces, test3_answer)
         self.assertEqual(test4_scattered_white_pieces, test4_answer)
 
-    def test_return_available_positions(self):
-        """Contains unit tests for the return_available_positions() method"""
-
-
-
-
-
     def test_flip_pieces_all_directions(self):
         """Contains Unit tests for the flip_pieces() method"""
 
-        print("UNITTEST:: Testing capture in all directions...")
-        # Create a new game
         game = Othello()
 
-        # Clear out the board except for the central X piece
-        game._board[4][4] = EMPTY
-        game._board[4][5] = EMPTY
-        game._board[5][5] = EMPTY
+        # Generate a board to test white to black token flips in all directions
+        capturing_color_locations = [[5, 4], [1, 4], [8, 4], [5, 1], [5, 8], [8, 1], [1, 8], [2, 1], [8, 7]]
+        captured_color_locations = [[2, 4], [3, 4], [4, 4], [6, 4], [7, 4], [5, 2], [5, 3], [5, 5], [5, 6], [5, 7],
+                                    [7, 2], [6, 3], [4, 5], [3, 6], [2, 7], [3, 2], [4, 3], [4, 4], [6, 5], [7, 6]]
+        test1_board = generate_board(capturing_color_locations, captured_color_locations)
+        game._board = test1_board
 
-        # Add white pieces in all vertical directions
-        game._board[1][4] = BLACK
-        game._board[2][4] = WHITE
-        game._board[3][4] = WHITE
-        game._board[4][4] = WHITE
-        game._board[6][4] = WHITE
-        game._board[7][4] = WHITE
-        game._board[8][4] = BLACK
+        # Generate the answer board
+        test_answer = [[5, 4], [1, 4], [8, 4], [5, 1], [5, 8], [8, 1], [1, 8], [2, 1], [8, 7], [2, 4], [3, 4], [4, 4],
+                       [6, 4], [7, 4], [5, 2], [5, 3], [5, 5], [5, 6], [5, 7], [7, 2], [6, 3], [4, 5], [3, 6], [2, 7],
+                       [3, 2], [4, 3], [4, 4], [6, 5], [7, 6]]
+        test1_answer_board = generate_board(test_answer, [])  # All token locations should be black
 
-        # Add white pieces in all horizonal directions
-        game._board[5][1] = BLACK
-        game._board[5][2] = WHITE
-        game._board[5][3] = WHITE
-        game._board[5][5] = WHITE
-        game._board[5][6] = WHITE
-        game._board[5][7] = WHITE
-        game._board[5][8] = BLACK
-
-        # Add white pieces in all positive diagonal directions
-        game._board[8][1] = BLACK
-        game._board[7][2] = WHITE
-        game._board[6][3] = WHITE
-        game._board[4][5] = WHITE
-        game._board[3][6] = WHITE
-        game._board[2][7] = WHITE
-        game._board[1][8] = BLACK
-
-        # Add white pieces in all negative diagonal directions
-        game._board[2][1] = BLACK
-        game._board[3][2] = WHITE
-        game._board[4][3] = WHITE
-        game._board[4][4] = WHITE
-        game._board[6][5] = WHITE
-        game._board[7][6] = WHITE
-        game._board[8][7] = BLACK
-
-        # Save an inverted board to test the white pieces
-        # inverted_board = invert_board(game.get_board())
-        # print(type(inverted_board))
-        # print(type(game.get_board()))
-
-        # Flip them
+        # Flip the tokens and check the results
         print("UNITTEST:: Board configuration before running flip_pieces():")
         game.print_board()
-
-        game.flip_pieces("black", 5, 4)
-
         print("UNITTEST:: Board configuration after running flip_pieces():")
+        game.flip_pieces("black", 5, 4)
         game.print_board()
+        self.assertEqual(game.get_board(), test1_answer_board)
 
+        # Run the same test with black to white token flips...
+        test2_board = generate_board(captured_color_locations, capturing_color_locations)
+        game._board = test2_board
+        test2_answer_board = generate_board([], test_answer)  # All token locations should be white
 
+        # Flip the tokens and check the results
+        print("UNITTEST:: Board configuration before running flip_pieces():")
+        game.print_board()
+        print("UNITTEST:: Board configuration after running flip_pieces():")
+        game.flip_pieces("white", 5, 4)
+        game.print_board()
+        self.assertEqual(game.get_board(), test2_answer_board)
 
-        # # Test flipping white pieces
-        # game._board = inverted_board
-        # print("UNITTEST:: Board configuration before running flip_pieces():")
-        # game.print_board()
-        #
-        # game.flip_pieces("white", 5, 4)
-        #
-        # print("UNITTEST:: Board configuration after running flip_pieces():")
-        # game.print_board()
+    def test_return_available_positions(self):
+        """Contains unit tests for the return_available_positions() method"""
