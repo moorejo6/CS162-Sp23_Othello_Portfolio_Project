@@ -60,8 +60,8 @@ class Othello:  # TODO: Check style guide lines for classes
 
     def __init__(self):
         self._board = generate_board()
-        self._direction_list = ["north", "northeast", "east", "southeast",
-                                "south", "southwest", "west", "northwest"]
+        self._direction_list = ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"]
+        self._player_list = []
 
     def get_board(self):
         """Returns the current game board"""
@@ -70,6 +70,10 @@ class Othello:  # TODO: Check style guide lines for classes
     def get_direction_list(self):
         """Returns the direction list"""
         return self._direction_list
+
+    def get_player_list(self):
+        """Returns the player list"""
+        return self._player_list
 
     def print_board(self):
         """Prints the current state of the Othello board. Returns nothing."""
@@ -87,7 +91,23 @@ class Othello:  # TODO: Check style guide lines for classes
     def return_winner(self):
         """TODO: ADD DOCSTRING"""
 
-        print("DEBUG:: in Othello.return_winner()")
+        num_black_pieces = len(self.return_piece_locations())
+        num_white_pieces = len(self.return_piece_locations())
+        black_player = self._player_list[0]
+        white_player = self._player_list[1]
+        winner_string = ""
+
+        if num_black_pieces > num_white_pieces:
+            winner_string = "Winner is black player: " + black_player.get_name()
+
+        elif num_white_pieces > num_black_pieces:
+            winner_string = "Winner is white player: " + white_player.get_name()
+
+        else:
+            winner_string = "It's a tie"
+
+        return winner_string
+
 
     # Finished first draft 6/4. Unit Tests implemented 6/4
     def color_to_piece(self, color):
@@ -288,42 +308,6 @@ class Othello:  # TODO: Check style guide lines for classes
             return self.rec_return_available_positions(direction, player_piece, opponent_piece, adjacent_row, adjacent_column)
 
 
-def misc_tests():
-    """FOR DEBUG USE ONLY! TODO: DELETE BEFORE SUBMISSION"""
-    game = Othello()
-    game.print_board()
-
-    # game._board[5][6] = "X"
-    game._board[6][6] = "O"
-    game._board[7][6] = "O"
-    game._board[8][6] = "X"
-
-    game._board[5][1] = "X"
-    game._board[5][2] = "O"
-    game._board[5][3] = "O"
-    game._board[5][4] = "O"
-    game._board[4][6] = "O"
-    game._board[3][6] = "X"
-
-    game.print_board()
-
-    white_locations = game.return_piece_locations("white")
-    black_locations = game.return_piece_locations("black")
-    print(f"DEBUG:: White has {len(white_locations)} pieces at: {white_locations}")
-    print(f"DEBUG:: Black has {len(black_locations)} pieces at: {black_locations}")
-
-    game._board[5][6] = "X"
-    game.flip_pieces("black", 5, 6)
-    # game.rec_flip_test("black", "south", 5, 6)
-    # game.rec_flip_test("black", "west", 5, 6)
-    game.print_board()
-
-    white_locations = game.return_piece_locations("white")
-    black_locations = game.return_piece_locations("black")
-    print(f"DEBUG:: White has {len(white_locations)} pieces at: {white_locations}")
-    print(f"DEBUG:: Black has {len(black_locations)} pieces at: {black_locations}")
-
-
 def test_game_loop():
     """FOR DEBUG USE ONLY! TODO: DELETE BEFORE SUBMISSION!"""
 
@@ -334,28 +318,26 @@ def test_game_loop():
     current_player = "black"
 
     while True:
-        # game.print_board()
 
         player_piece, opponent_piece = game.color_to_piece(current_player)
         valid_moves = game.return_available_positions(current_player)
 
         if valid_moves != []:
             for move in valid_moves:
-                game._board[move[0]][move[1]] = "="
+                game._board[move[0]][move[1]] = "+"
         game.print_board()
 
         for row in range(board_row_length):
             for column in range(board_column_length):
-                if game._board[row][column] == "=":
+                if game._board[row][column] == "+":
                     game._board[row][column] = "."
 
         print(f"{current_player} has {len(game.return_piece_locations(current_player))} tokens on the board")
         print(f"{len(valid_moves)} moves are available: {valid_moves}")
 
-        valid_move = False
-
         player_row = None
         player_column = None
+        valid_move = False
 
         while not valid_move:
             player_row = int(input(f"{current_player}'s turn. What row do you want to move to? "))
@@ -378,15 +360,6 @@ def test_game_loop():
 
 def main():
     test_game_loop()
-
-    # game = Othello()
-    # game.print_board()
-    # valid_moves = game.return_available_positions("black")
-    # print(game.return_piece_locations("black"))
-    # for move in valid_moves:
-    #     game._board[move[0]][move[1]] = "="
-    # game.print_board()
-    # print(f"DEBUG:: Valid moves are: {valid_moves}")
 
 
 if __name__ == "__main__":

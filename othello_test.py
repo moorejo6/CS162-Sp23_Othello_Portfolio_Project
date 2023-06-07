@@ -209,3 +209,14 @@ class OthelloUnitTests(unittest.TestCase):
 
     def test_return_available_positions(self):
         """Contains unit tests for the return_available_positions() method"""
+
+        game = Othello()
+
+        # Test starting locations
+        test1_answer = [[6, 5], [4, 3], [3, 4], [5, 6]]
+        test2_answer = [[4, 6], [6, 4], [3, 5], [5, 3]]
+        self.assertEqual(game.return_available_positions("black"), test1_answer)
+        self.assertEqual(game.return_available_positions("white"), test2_answer)
+
+    def test_return_winner(self):
+        """Contains unit tests for the return_winner() method"""
