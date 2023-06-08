@@ -288,42 +288,6 @@ class Othello:  # TODO: Check style guide lines for classes
             return self.rec_return_available_positions(direction, player_piece, opponent_piece, adjacent_row, adjacent_column)
 
 
-def misc_tests():
-    """FOR DEBUG USE ONLY! TODO: DELETE BEFORE SUBMISSION"""
-    game = Othello()
-    game.print_board()
-
-    # game._board[5][6] = "X"
-    game._board[6][6] = "O"
-    game._board[7][6] = "O"
-    game._board[8][6] = "X"
-
-    game._board[5][1] = "X"
-    game._board[5][2] = "O"
-    game._board[5][3] = "O"
-    game._board[5][4] = "O"
-    game._board[4][6] = "O"
-    game._board[3][6] = "X"
-
-    game.print_board()
-
-    white_locations = game.return_piece_locations("white")
-    black_locations = game.return_piece_locations("black")
-    print(f"DEBUG:: White has {len(white_locations)} pieces at: {white_locations}")
-    print(f"DEBUG:: Black has {len(black_locations)} pieces at: {black_locations}")
-
-    game._board[5][6] = "X"
-    game.flip_pieces("black", 5, 6)
-    # game.rec_flip_test("black", "south", 5, 6)
-    # game.rec_flip_test("black", "west", 5, 6)
-    game.print_board()
-
-    white_locations = game.return_piece_locations("white")
-    black_locations = game.return_piece_locations("black")
-    print(f"DEBUG:: White has {len(white_locations)} pieces at: {white_locations}")
-    print(f"DEBUG:: Black has {len(black_locations)} pieces at: {black_locations}")
-
-
 def test_game_loop():
     """FOR DEBUG USE ONLY! TODO: DELETE BEFORE SUBMISSION!"""
 
@@ -378,15 +342,6 @@ def test_game_loop():
 
 def main():
     test_game_loop()
-
-    # game = Othello()
-    # game.print_board()
-    # valid_moves = game.return_available_positions("black")
-    # print(game.return_piece_locations("black"))
-    # for move in valid_moves:
-    #     game._board[move[0]][move[1]] = "="
-    # game.print_board()
-    # print(f"DEBUG:: Valid moves are: {valid_moves}")
 
 
 if __name__ == "__main__":
