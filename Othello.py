@@ -61,6 +61,7 @@ class Othello:  # TODO: Check style guide lines for classes
     def __init__(self):
         self._board = generate_board()
         self._direction_list = ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"]
+        self._coordinate_shift = [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]]
         self._player_list = []
 
     def get_board(self):
@@ -91,8 +92,8 @@ class Othello:  # TODO: Check style guide lines for classes
     def return_winner(self):
         """TODO: ADD DOCSTRING"""
 
-        num_black_pieces = len(self.return_piece_locations())
-        num_white_pieces = len(self.return_piece_locations())
+        num_black_pieces = len(self.return_piece_locations("black"))
+        num_white_pieces = len(self.return_piece_locations("white"))
         black_player = self._player_list[0]
         white_player = self._player_list[1]
         winner_string = ""
@@ -107,7 +108,6 @@ class Othello:  # TODO: Check style guide lines for classes
             winner_string = "It's a tie"
 
         return winner_string
-
 
     # Finished first draft 6/4. Unit Tests implemented 6/4
     def color_to_piece(self, color):
@@ -146,42 +146,45 @@ class Othello:  # TODO: Check style guide lines for classes
         player_piece, opponent_piece = self.color_to_piece(color)
 
         # Check every direction for valid pieces to flip
-        for direction in self._direction_list:
-            self.rec_flip_pieces(direction, player_piece, opponent_piece, row, column)
+        for shift in self._coordinate_shift:
+            self.rec_flip_pieces(shift, player_piece, opponent_piece, row, column)
 
     # Finished first draft 6/2
-    def rec_flip_pieces(self, direction, player_piece, opponent_piece, row, column):
+    def rec_flip_pieces(self, shift, player_piece, opponent_piece, row, column):
         """TODO: ADD DOCSTRING"""
 
         # Get the value of the adjacent space in the given direction
-        adjacent_row, adjacent_column = self.return_adjacent_coordinate(direction, row, column)
-        value_at_adjacent_location = self._board[adjacent_row][adjacent_column]
+        # adj_row, adj_column, adj_value = self.adjacent_coordinate_and_value(direction, row, column)
+
+        adj_row = row + shift[0]
+        adj_column = column + shift[1]
+        adj_value = self._board[adj_row][adj_column]
 
         # Base case 1: We hit a wall. No valid flips.
-        if value_at_adjacent_location == "*":
+        if adj_value == "*":
             return False
 
         # Base case 2: We found an empty space. No valid flips
-        if value_at_adjacent_location == ".":
+        if adj_value == ".":
             return False
 
         # Base case 3: We found the current player's piece.
         #              This indicates that we should flip the pieces we passed over.
-        if value_at_adjacent_location == player_piece:
+        if adj_value == player_piece:
             return True
 
         # Recursive case: We're following a trail of the opponent's pieces
-        if value_at_adjacent_location == opponent_piece:
+        if adj_value == opponent_piece:
 
             # If we eventually find the current player's piece, we should flip the value on the board
-            if self.rec_flip_pieces(direction, player_piece, opponent_piece, adjacent_row, adjacent_column):
-                self._board[adjacent_row][adjacent_column] = player_piece
+            if self.rec_flip_pieces(shift, player_piece, opponent_piece, adj_row, adj_column):
+                self._board[adj_row][adj_column] = player_piece
                 return True
             else:
                 return False
 
-    # Finished first draft 6/3. Finished unit tests 6/4
-    def return_adjacent_coordinate(self, direction, row, column):
+    # Finished first draft 6/3. Finished unit tests 6/4.
+    def adjacent_coordinate_and_value(self, direction, row, column):
         """Takes three parameters:
         direction - the direction to travel from the starting location
         row, column - The row,column coordinate pair for the starting location
@@ -192,43 +195,39 @@ class Othello:  # TODO: Check style guide lines for classes
             If the adjacent coordinates are within the game board, returns the adjacent coordinates.
             If the adjacent coordinates are in an invalid position, returns the string 'invalid' """
 
-        new_row = -1
-        new_column = -1
+        adj_row, adj_column, adj_value = None, None, None
 
         if direction.lower() == "north":
-            new_row = row - 1
-            new_column = column
+            adj_row = row - 1
+            adj_column = column
         elif direction.lower() == "northeast":
-            new_row = row - 1
-            new_column = column + 1
+            adj_row = row - 1
+            adj_column = column + 1
         elif direction.lower() == "east":
-            new_row = row
-            new_column = column + 1
+            adj_row = row
+            adj_column = column + 1
         elif direction.lower() == "southeast":
-            new_row = row + 1
-            new_column = column + 1
+            adj_row = row + 1
+            adj_column = column + 1
         elif direction.lower() == "south":
-            new_row = row + 1
-            new_column = column
+            adj_row = row + 1
+            adj_column = column
         elif direction.lower() == "southwest":
-            new_row = row + 1
-            new_column = column - 1
+            adj_row = row + 1
+            adj_column = column - 1
         elif direction.lower() == "west":
-            new_row = row
-            new_column = column - 1
+            adj_row = row
+            adj_column = column - 1
         elif direction.lower() == "northwest":
-            new_row = row - 1
-            new_column = column - 1
+            adj_row = row - 1
+            adj_column = column - 1
         else:
             print(f"ERROR in Othello.return_adjacent_coordinate:: Invalid direction: {direction}")
             return "invalid"
 
-        if new_row < 0 or new_row > 9 or new_column < 0 or new_column > 9:
-            # print(f"ERROR in Othello.return_adjacent_coordinate:: "
-            #       f"Invalid coordinate pair ({new_row}, {new_column}) {direction} of ({row}, {column}")
-            return "invalid"
+        adj_value = self._board[adj_row][adj_column]
 
-        return new_row, new_column
+        return adj_row, adj_column, adj_value
 
     # Finished first draft 6/3
     def return_piece_locations(self, color):
@@ -240,16 +239,8 @@ class Othello:  # TODO: Check style guide lines for classes
 
         Returns: A list that contains the coordinate location of every piece of the given color."""
 
-        player_piece = None
+        player_piece, opponent_piece = self.color_to_piece(color)
         piece_locations = []
-
-        if color.lower() == "black":
-            player_piece = "X"
-        elif color.lower() == "white":
-            player_piece = "O"
-        else:
-            print(f"ERROR:: Invalid color: {color}")
-            return -1
 
         number_of_rows = len(self._board)
         number_of_columns = len(self._board[0])
@@ -272,40 +263,34 @@ class Othello:  # TODO: Check style guide lines for classes
         for token in player_token_locations:
             for direction in self._direction_list:
 
-                adjacent_row, adjacent_column = self.return_adjacent_coordinate(direction, token[0], token[1])
-                value_at_adjacent_location = self._board[adjacent_row][adjacent_column]
+                possible_move = self.rec_return_available_positions(direction, player_piece, opponent_piece, token[0], token[1])
 
-                if value_at_adjacent_location == opponent_piece:
-                    # TODO: CAN ADJACENT_ROW AND ADJACENT_COLUMN REPLACE TOKEN[0] AND TOKEN[1]
-                    possible_move = self.rec_return_available_positions(direction, player_piece, opponent_piece, token[0], token[1])
-
-                    if possible_move is not None and possible_move not in valid_move_list:
-                        valid_move_list.append(possible_move)
+                if possible_move is not None and possible_move not in valid_move_list:
+                    valid_move_list.append(possible_move)
 
         return valid_move_list
 
-    def rec_return_available_positions(self, direction, player_piece, opponent_piece, row, column):
+    def rec_return_available_positions(self, direction, player_piece, opponent_piece, row, column, value=None):
         """TODO: ADD DOCSTRING"""
 
         # Get the value of the adjacent space in the given direction
-        adjacent_row, adjacent_column = self.return_adjacent_coordinate(direction, row, column)
-        value_at_adjacent_location = self._board[adjacent_row][adjacent_column]
+        adj_row, adj_column, adj_value = self.adjacent_coordinate_and_value(direction, row, column)
 
         # Base case 1: We hit a wall. Not a valid move.
-        if value_at_adjacent_location == "*":
+        if adj_value == "*":
             return None
 
         # Base case 2: We found an empty space. This indicates a valid position to move.
-        if value_at_adjacent_location == ".":
-            return [adjacent_row, adjacent_column]
+        if adj_value == "." and value is not None:
+            return [adj_row, adj_column]
 
         # Base case 3: We found the current player's piece. Not a valid move
-        if value_at_adjacent_location == player_piece:
+        if adj_value == player_piece:
             return None
 
         # Recursive case: We're following a trail of the opponent's pieces
-        if value_at_adjacent_location == opponent_piece:
-            return self.rec_return_available_positions(direction, player_piece, opponent_piece, adjacent_row, adjacent_column)
+        if adj_value == opponent_piece:
+            return self.rec_return_available_positions(direction, player_piece, opponent_piece, adj_row, adj_column, adj_value)
 
 
 def test_game_loop():
