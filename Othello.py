@@ -154,7 +154,6 @@ class Othello:  # TODO: Check style guide lines for classes
         """TODO: ADD DOCSTRING"""
 
         # Get the value of the adjacent space in the given direction
-        # adj_row, adj_column, adj_value = self.adjacent_coordinate_and_value(direction, row, column)
 
         adj_row = row + shift[0]
         adj_column = column + shift[1]
@@ -182,52 +181,6 @@ class Othello:  # TODO: Check style guide lines for classes
                 return True
             else:
                 return False
-
-    # Finished first draft 6/3. Finished unit tests 6/4.
-    def adjacent_coordinate_and_value(self, direction, row, column):
-        """Takes three parameters:
-        direction - the direction to travel from the starting location
-        row, column - The row,column coordinate pair for the starting location
-
-        Purpose: Takes a row,column pair and returns an adjacent coordinate pair in the given direction
-
-        Returns:
-            If the adjacent coordinates are within the game board, returns the adjacent coordinates.
-            If the adjacent coordinates are in an invalid position, returns the string 'invalid' """
-
-        adj_row, adj_column, adj_value = None, None, None
-
-        if direction.lower() == "north":
-            adj_row = row - 1
-            adj_column = column
-        elif direction.lower() == "northeast":
-            adj_row = row - 1
-            adj_column = column + 1
-        elif direction.lower() == "east":
-            adj_row = row
-            adj_column = column + 1
-        elif direction.lower() == "southeast":
-            adj_row = row + 1
-            adj_column = column + 1
-        elif direction.lower() == "south":
-            adj_row = row + 1
-            adj_column = column
-        elif direction.lower() == "southwest":
-            adj_row = row + 1
-            adj_column = column - 1
-        elif direction.lower() == "west":
-            adj_row = row
-            adj_column = column - 1
-        elif direction.lower() == "northwest":
-            adj_row = row - 1
-            adj_column = column - 1
-        else:
-            print(f"ERROR in Othello.return_adjacent_coordinate:: Invalid direction: {direction}")
-            return "invalid"
-
-        adj_value = self._board[adj_row][adj_column]
-
-        return adj_row, adj_column, adj_value
 
     # Finished first draft 6/3
     def return_piece_locations(self, color):
@@ -261,20 +214,21 @@ class Othello:  # TODO: Check style guide lines for classes
 
         # For every token the player has on the board, search all directions around the token for available moves
         for token in player_token_locations:
-            for direction in self._direction_list:
+            for shift in self._coordinate_shift:
 
-                possible_move = self.rec_return_available_positions(direction, player_piece, opponent_piece, token[0], token[1])
+                possible_move = self.rec_return_available_positions(shift, player_piece, opponent_piece, token[0], token[1])
 
                 if possible_move is not None and possible_move not in valid_move_list:
                     valid_move_list.append(possible_move)
 
         return valid_move_list
 
-    def rec_return_available_positions(self, direction, player_piece, opponent_piece, row, column, value=None):
+    def rec_return_available_positions(self, shift, player_piece, opponent_piece, row, column, value=None):
         """TODO: ADD DOCSTRING"""
 
-        # Get the value of the adjacent space in the given direction
-        adj_row, adj_column, adj_value = self.adjacent_coordinate_and_value(direction, row, column)
+        adj_row = row + shift[0]
+        adj_column = column + shift[1]
+        adj_value = self._board[adj_row][adj_column]
 
         # Base case 1: We hit a wall. Not a valid move.
         if adj_value == "*":
@@ -290,7 +244,7 @@ class Othello:  # TODO: Check style guide lines for classes
 
         # Recursive case: We're following a trail of the opponent's pieces
         if adj_value == opponent_piece:
-            return self.rec_return_available_positions(direction, player_piece, opponent_piece, adj_row, adj_column, adj_value)
+            return self.rec_return_available_positions(shift, player_piece, opponent_piece, adj_row, adj_column, adj_value)
 
 
 def test_game_loop():
