@@ -200,6 +200,7 @@ class OthelloUnitTests(unittest.TestCase):
         opponent_locations = [[2, 7], [5, 2], [5, 6], [5, 7],  [6, 5], [7, 6], [8, 7]]
         test1_answer = generate_board(player_locations, opponent_locations)
 
+        # Test results
         print(f"UNITTEST test_make_move: Board position test 1, black to place piece at [5,4]: ")
         game.print_board()
         game.make_move("black", [5, 4])

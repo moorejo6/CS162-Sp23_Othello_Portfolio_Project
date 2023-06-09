@@ -58,6 +58,8 @@ class Player:
 class Othello:  # TODO: Check style guide lines for classes
     """TODO: ADD DOCSTRING"""
 
+    # -------------------- Init and getter methods -------------------- #
+
     def __init__(self):
         self._board = generate_board()
         self._coordinate_shift = [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]]
@@ -74,6 +76,8 @@ class Othello:  # TODO: Check style guide lines for classes
     def get_player_list(self):
         """Returns the player list"""
         return self._player_list
+
+    # -------------------- Methods listed in the README -------------------- #
 
     def print_board(self):
         """Prints the current state of the Othello board. Returns nothing."""
@@ -93,23 +97,6 @@ class Othello:  # TODO: Check style guide lines for classes
             print("")
             row_num += 1
         print("")
-
-    def print_available_positions(self, color):
-        """Prints a board with available moves shown"""
-        valid_moves = self.return_available_positions(color)
-        board_row_length = len(self._board)
-        board_column_length = len(self._board[0])
-
-        if valid_moves != []:
-            for move in valid_moves:
-                self._board[move[0]][move[1]] = "="
-
-        self.print_board()
-
-        for row in range(board_row_length):
-            for column in range(board_column_length):
-                if self._board[row][column] == "=":
-                    self._board[row][column] = "."
 
     # Finished first draft on 6/9
     def create_player(self, player_name, color):
@@ -165,29 +152,6 @@ class Othello:  # TODO: Check style guide lines for classes
         return valid_move_list
 
     # Finished first draft on 6/9
-    def rec_return_available_positions(self, current_location, shift, player_piece, opponent_piece, value=None):
-        """TODO: ADD DOCSTRING"""
-
-        adjacent_space = [current_location[0] + shift[0], current_location[1] + shift[1]]
-        adjacent_value = self._board[adjacent_space[0]][adjacent_space[1]]
-
-        # Base case 1: We hit a wall. Not a valid move.
-        if adjacent_value == "*":
-            return None
-
-        # Base case 2: We found an empty space. This indicates a valid position to move.
-        if adjacent_value == "." and value is not None:
-            return adjacent_space
-
-        # Base case 3: We found the current player's piece. Not a valid move
-        if adjacent_value == player_piece:
-            return None
-
-        # Recursive case: We're following a trail of the opponent's pieces
-        if adjacent_value == opponent_piece:
-            return self.rec_return_available_positions(adjacent_space, shift, player_piece, opponent_piece, adjacent_value)
-
-    # Finished first draft on 6/9
     def make_move(self, color, piece_position):
         """TODO: ADD DOCSTRING"""
 
@@ -196,6 +160,70 @@ class Othello:  # TODO: Check style guide lines for classes
         self.flip_pieces(color, piece_position)
 
         return self._board
+
+    def play_game(self, player_color, piece_position):
+        """TODO: ADD DOCSTRING"""
+
+        print("in play_game()")
+
+    # -------------------- Helper methods -------------------- #
+
+    # Finished first draft 6/4. Unit Tests implemented 6/4
+    def color_to_piece(self, color):
+        """Takes one parameter:
+        color - The color of the current players piece
+
+        Purpose: Translates the player color into strings that represent the player and opponent's pieces.
+
+        Returns two strings: one of the current player's pieces and another representing the opponent's pieces """
+
+        player_piece = None
+        opponent_piece = None
+
+        if color.lower() == "black":
+            player_piece = "X"
+            opponent_piece = "O"
+        elif color.lower() == "white":
+            player_piece = "O"
+            opponent_piece = "X"
+        else:
+            print(f"ERROR in Othello.color_to_piece:: Invalid color: {color}")
+
+        return player_piece, opponent_piece
+
+    # Finished first draft 6/3
+    def return_piece_locations(self, color):
+        """Returns a list of all coordinate locations on the game board that contain a given color piece"""
+
+        player_piece, opponent_piece = self.color_to_piece(color)
+        piece_locations = []
+
+        number_of_rows = len(self._board)
+        number_of_columns = len(self._board[0])
+
+        for row in range(number_of_rows):
+            for column in range(number_of_columns):
+                if self._board[row][column] == player_piece:
+                    piece_locations.append([row, column])
+
+        return piece_locations
+
+    def print_available_positions(self, color):
+        """Prints a board with available moves shown"""
+        valid_moves = self.return_available_positions(color)
+        board_row_length = len(self._board)
+        board_column_length = len(self._board[0])
+
+        if valid_moves != []:
+            for move in valid_moves:
+                self._board[move[0]][move[1]] = "="
+
+        self.print_board()
+
+        for row in range(board_row_length):
+            for column in range(board_column_length):
+                if self._board[row][column] == "=":
+                    self._board[row][column] = "."
 
     # Finished first draft on 6/2
     def flip_pieces(self, color, piece_position):
@@ -239,48 +267,29 @@ class Othello:  # TODO: Check style guide lines for classes
             else:
                 return False
 
+    # Finished first draft on 6/9
+    def rec_return_available_positions(self, current_location, shift, player_piece, opponent_piece, value=None):
+        """TODO: ADD DOCSTRING"""
 
-    # Finished first draft 6/4. Unit Tests implemented 6/4
-    def color_to_piece(self, color):
-        """Takes one parameter:
-        color - The color of the current players piece
+        adjacent_space = [current_location[0] + shift[0], current_location[1] + shift[1]]
+        adjacent_value = self._board[adjacent_space[0]][adjacent_space[1]]
 
-        Purpose: Translates the player color into strings that represent the player and opponent's pieces.
+        # Base case 1: We hit a wall. Not a valid move.
+        if adjacent_value == "*":
+            return None
 
-        Returns two strings: one of the current player's pieces and another representing the opponent's pieces """
+        # Base case 2: We found an empty space. This indicates a valid position to move.
+        if adjacent_value == "." and value is not None:
+            return adjacent_space
 
-        player_piece = None
-        opponent_piece = None
+        # Base case 3: We found the current player's piece. Not a valid move
+        if adjacent_value == player_piece:
+            return None
 
-        if color.lower() == "black":
-            player_piece = "X"
-            opponent_piece = "O"
-        elif color.lower() == "white":
-            player_piece = "O"
-            opponent_piece = "X"
-        else:
-            print(f"ERROR in Othello.color_to_piece:: Invalid color: {color}")
+        # Recursive case: We're following a trail of the opponent's pieces
+        if adjacent_value == opponent_piece:
+            return self.rec_return_available_positions(adjacent_space, shift, player_piece, opponent_piece, adjacent_value)
 
-        return player_piece, opponent_piece
-
-    # Finished first draft 6/3
-    def return_piece_locations(self, color):
-        """Returns a list of all coordinate locations on the game board that contain a given color piece"""
-
-        player_piece, opponent_piece = self.color_to_piece(color)
-        piece_locations = []
-
-        number_of_rows = len(self._board)
-        number_of_columns = len(self._board[0])
-
-        for row in range(number_of_rows):
-            for column in range(number_of_columns):
-                if self._board[row][column] == player_piece:
-                    piece_locations.append([row, column])
-
-        return piece_locations
-
-    # Finished first draft 6/2
 
 
 
