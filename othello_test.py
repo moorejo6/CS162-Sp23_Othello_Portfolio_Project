@@ -16,6 +16,52 @@ WHITE = "O"
 class OthelloUnitTests(unittest.TestCase):
     """Contains unit tests for the othello game"""
 
+    def test_create_player(self):
+        """Tests the crete_player() method"""
+
+        game = Othello()
+
+        # Create new players
+        game.create_player("Test Player", "black")
+        game.create_player("Test Player2", "white")
+        players = game.get_player_list()
+
+        # Test results
+        self.assertEqual(players[0].get_name(), "Test Player")
+        self.assertEqual(players[0].get_color(), "black")
+        self.assertEqual(players[1].get_name(), "Test Player2")
+        self.assertEqual(players[1].get_color(), "white")
+
+        # Overwrite previous players
+        game.create_player("new black player", "black")
+        game.create_player("new white player", "white")
+        players = game.get_player_list()
+
+        # Test results
+        self.assertEqual(players[0].get_name(), "new black player")
+        self.assertEqual(players[0].get_color(), "black")
+        self.assertEqual(players[1].get_name(), "new white player")
+        self.assertEqual(players[1].get_color(), "white")
+
+    def test_return_winner(self):
+        """Tests the return_winner() method"""
+
+        game = Othello()
+
+        # Test in starting board position
+        self.assertEqual(game.return_winner(), "It's a tie")
+
+        # Add some black pieces and test
+        game._board[2][2] = BLACK
+        game._board[3][3] = BLACK
+        self.assertEqual(game.return_winner(), "Winner is black player: Player 1")
+
+        # Add some white pieces and test
+        game._board[7][6] = WHITE
+        game._board[7][7] = WHITE
+        game._board[7][8] = WHITE
+        self.assertEqual(game.return_winner(), "Winner is white player: Player 2")
+
     def test_color_to_piece(self):
         """Tests the color_to_piece() method"""
 
@@ -113,6 +159,3 @@ class OthelloUnitTests(unittest.TestCase):
         test2_answer = [[4, 6], [6, 4], [3, 5], [5, 3]]
         self.assertEqual(game.return_available_positions("black"), test1_answer)
         self.assertEqual(game.return_available_positions("white"), test2_answer)
-
-    def test_return_winner(self):
-        """Contains unit tests for the return_winner() method"""
