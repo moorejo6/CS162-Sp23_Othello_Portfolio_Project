@@ -44,7 +44,7 @@ class Player:
 
     def __init__(self, name, color):
         self._name = name
-        self._color = color  # TODO: handle invalid player color?
+        self._color = color
 
     def get_name(self):
         """Returns the player's name"""
@@ -78,7 +78,7 @@ class Othello:  # TODO: Check style guide lines for classes
     def print_board(self):
         """Prints the current state of the Othello board. Returns nothing."""
 
-        print("    1 2 3 4 5 6 7 8 ")
+        print("\n    1 2 3 4 5 6 7 8 ")
         row_num = 0
 
         for row in range(len(self._board)):
@@ -92,6 +92,25 @@ class Othello:  # TODO: Check style guide lines for classes
                 print(self._board[row][column], end=" ")
             print("")
             row_num += 1
+        print("")
+
+    def print_available_positions(self, color):
+        """Prints a board with available moves shown"""
+        valid_moves = self.return_available_positions(color)
+        board_row_length = len(self._board)
+        board_column_length = len(self._board[0])
+
+        if valid_moves != []:
+            for move in valid_moves:
+                self._board[move[0]][move[1]] = "="
+
+        self.print_board()
+
+        for row in range(board_row_length):
+            for column in range(board_column_length):
+                if self._board[row][column] == "=":
+                    self._board[row][column] = "."
+
 
     # Finished first draft on 6/9
     def create_player(self, player_name, color):
@@ -135,38 +154,37 @@ class Othello:  # TODO: Check style guide lines for classes
         valid_move_list = []
 
         # For every token the player has on the board, search all directions around the token for available moves
-        for token in player_token_locations:
+        for token_location in player_token_locations:
             for shift in self._coordinate_shift:
 
-                possible_move = self.rec_return_available_positions(shift, player_piece, opponent_piece, token[0], token[1])
+                possible_move = self.rec_return_available_positions(token_location, shift, player_piece, opponent_piece)
 
                 if possible_move is not None and possible_move not in valid_move_list:
                     valid_move_list.append(possible_move)
 
         return valid_move_list
 
-    def rec_return_available_positions(self, shift, player_piece, opponent_piece, row, column, value=None):
+    def rec_return_available_positions(self, current_location, shift, player_piece, opponent_piece, value=None):
         """TODO: ADD DOCSTRING"""
 
-        adj_row = row + shift[0]
-        adj_column = column + shift[1]
-        adj_value = self._board[adj_row][adj_column]
+        adjacent_space = [current_location[0] + shift[0], current_location[1] + shift[1]]
+        adjacent_value = self._board[adjacent_space[0]][adjacent_space[1]]
 
         # Base case 1: We hit a wall. Not a valid move.
-        if adj_value == "*":
+        if adjacent_value == "*":
             return None
 
         # Base case 2: We found an empty space. This indicates a valid position to move.
-        if adj_value == "." and value is not None:
-            return [adj_row, adj_column]
+        if adjacent_value == "." and value is not None:
+            return adjacent_space
 
         # Base case 3: We found the current player's piece. Not a valid move
-        if adj_value == player_piece:
+        if adjacent_value == player_piece:
             return None
 
         # Recursive case: We're following a trail of the opponent's pieces
-        if adj_value == opponent_piece:
-            return self.rec_return_available_positions(shift, player_piece, opponent_piece, adj_row, adj_column, adj_value)
+        if adjacent_value == opponent_piece:
+            return self.rec_return_available_positions(adjacent_space, shift, player_piece, opponent_piece, adjacent_value)
 
 
     # Finished first draft 6/4. Unit Tests implemented 6/4
@@ -275,15 +293,7 @@ def test_game_loop():
         player_piece, opponent_piece = game.color_to_piece(current_player)
         valid_moves = game.return_available_positions(current_player)
 
-        if valid_moves != []:
-            for move in valid_moves:
-                game._board[move[0]][move[1]] = "+"
-        game.print_board()
-
-        for row in range(board_row_length):
-            for column in range(board_column_length):
-                if game._board[row][column] == "+":
-                    game._board[row][column] = "."
+        game.print_available_positions(current_player)
 
         print(f"{current_player} has {len(game.return_piece_locations(current_player))} tokens on the board")
         print(f"{len(valid_moves)} moves are available: {valid_moves}")
@@ -312,11 +322,7 @@ def test_game_loop():
 
 
 def main():
-    # test_game_loop()
-
-    game = Othello()
-
-    print(game.return_winner())
+    test_game_loop()
 
 if __name__ == "__main__":
     main()

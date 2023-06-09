@@ -62,6 +62,42 @@ class OthelloUnitTests(unittest.TestCase):
         game._board[7][8] = WHITE
         self.assertEqual(game.return_winner(), "Winner is white player: Player 2")
 
+    def test_return_available_positions(self):
+        """Contains unit tests for the return_available_positions() method"""
+
+        game = Othello()
+
+        # Test starting locations
+        test1_answer = [[6, 5], [4, 3], [3, 4], [5, 6]]
+        test2_answer = [[4, 6], [6, 4], [3, 5], [5, 3]]
+        self.assertEqual(game.return_available_positions("black"), test1_answer)
+        self.assertEqual(game.return_available_positions("white"), test2_answer)
+
+        # Create a new test board for a scenario where it's white's turn to move
+        opponent_locations = [[3, 4], [3, 5], [4, 4], [4, 5], [5, 3], [5, 5], [6, 2], [6, 6]]
+        active_player_locations = [[3, 6], [4, 3], [5, 4]]
+        test3_board = generate_board(opponent_locations, active_player_locations)
+        game._board = test3_board
+
+        # Create the answer and test the results
+        test3_answer = [[3, 3], [2, 5], [4, 6], [6, 3], [2, 4], [5, 6], [5, 2]]
+        print(f"UNITTEST:: test_return_available_positions test 3 board:")
+        game.print_available_positions("white")
+        self.assertEqual(game.return_available_positions("white"), test3_answer)
+
+        # Create a new test board for a scenario where it's black's turn to move
+        active_player_locations = [[3, 3], [4, 4], [4, 5], [4, 7], [5, 4]]
+        opponent_locations = [[3, 7], [4, 6], [5, 5], [6, 5], [7, 5]]
+        test4_board = generate_board(active_player_locations, opponent_locations)
+        game._board = test4_board
+
+        # Create the answer and test the results
+        test4_answer = [[6, 6], [8, 5], [2, 7], [5, 6], [7, 6]]
+        print(f"UNITTEST:: test_return_available_positions test 4 board:")
+        game.print_available_positions("black")
+        self.assertEqual(game.return_available_positions("black"), test4_answer)
+
+
     def test_color_to_piece(self):
         """Tests the color_to_piece() method"""
 
@@ -148,14 +184,3 @@ class OthelloUnitTests(unittest.TestCase):
         game.flip_pieces("white", 5, 4)
         game.print_board()
         self.assertEqual(game.get_board(), test2_answer_board)
-
-    def test_return_available_positions(self):
-        """Contains unit tests for the return_available_positions() method"""
-
-        game = Othello()
-
-        # Test starting locations
-        test1_answer = [[6, 5], [4, 3], [3, 4], [5, 6]]
-        test2_answer = [[4, 6], [6, 4], [3, 5], [5, 3]]
-        self.assertEqual(game.return_available_positions("black"), test1_answer)
-        self.assertEqual(game.return_available_positions("white"), test2_answer)
