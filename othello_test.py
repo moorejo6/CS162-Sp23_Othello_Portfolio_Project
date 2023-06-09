@@ -81,7 +81,7 @@ class OthelloUnitTests(unittest.TestCase):
 
         # Create the answer and test the results
         test3_answer = [[3, 3], [2, 5], [4, 6], [6, 3], [2, 4], [5, 6], [5, 2]]
-        print(f"UNITTEST:: test_return_available_positions test 3 board:")
+        print(f"UNITTEST:: test_return_available_positions test 3 board (white to move):")
         game.print_available_positions("white")
         self.assertEqual(game.return_available_positions("white"), test3_answer)
 
@@ -93,10 +93,9 @@ class OthelloUnitTests(unittest.TestCase):
 
         # Create the answer and test the results
         test4_answer = [[6, 6], [8, 5], [2, 7], [5, 6], [7, 6]]
-        print(f"UNITTEST:: test_return_available_positions test 4 board:")
+        print(f"UNITTEST:: test_return_available_positions test 4 board (black to move):")
         game.print_available_positions("black")
         self.assertEqual(game.return_available_positions("black"), test4_answer)
-
 
     def test_color_to_piece(self):
         """Tests the color_to_piece() method"""
@@ -165,10 +164,9 @@ class OthelloUnitTests(unittest.TestCase):
         test1_answer_board = generate_board(test_answer, [])  # All token locations should be black
 
         # Flip the tokens and check the results
-        print("UNITTEST:: Board configuration before running flip_pieces():")
+        print("UNITTEST test_flip_pieces_all_directions:: Board configuration test 1:")
         game.print_board()
-        print("UNITTEST:: Board configuration after running flip_pieces():")
-        game.flip_pieces("black", 5, 4)
+        game.flip_pieces("black", [5, 4])
         game.print_board()
         self.assertEqual(game.get_board(), test1_answer_board)
 
@@ -178,9 +176,32 @@ class OthelloUnitTests(unittest.TestCase):
         test2_answer_board = generate_board([], test_answer)  # All token locations should be white
 
         # Flip the tokens and check the results
-        print("UNITTEST:: Board configuration before running flip_pieces():")
+        print("UNITTEST test_flip_pieces_all_directions:: Board configuration test 2:")
         game.print_board()
-        print("UNITTEST:: Board configuration after running flip_pieces():")
-        game.flip_pieces("white", 5, 4)
+        game.flip_pieces("white", [5, 4])
         game.print_board()
         self.assertEqual(game.get_board(), test2_answer_board)
+
+    def test_make_move(self):
+        """Tests the make_move() method"""
+
+        game = Othello()
+
+        # Generate a board starting with the first flip pieces test
+        player_locations = [[1, 4], [8, 4], [5, 1], [5, 8], [8, 1], [1, 8], [2, 1], [5, 5], [3, 6]]
+        opponent_locations = [[2, 4], [3, 4], [4, 4], [6, 4], [7, 4], [5, 2], [5, 6], [5, 7], [7, 2], [6, 3], [4, 5],
+                              [2, 7], [3, 2], [4, 3], [4, 4], [6, 5], [7, 6], [8, 7]]
+        test1_board = generate_board(player_locations, opponent_locations)
+        game._board = test1_board
+
+        # Generate an answer board
+        player_locations = [[1, 4], [1, 8], [2, 1], [2, 4], [3, 2], [3, 4], [3, 6], [4, 3], [4, 4], [4, 5],
+                            [5, 1], [5, 4], [5, 5], [5, 8], [6, 3], [6, 4], [7, 2], [7, 4], [8, 1], [8, 4]]
+        opponent_locations = [[2, 7], [5, 2], [5, 6], [5, 7],  [6, 5], [7, 6], [8, 7]]
+        test1_answer = generate_board(player_locations, opponent_locations)
+
+        print(f"UNITTEST test_make_move: Board position test 1, black to place piece at [5,4]: ")
+        game.print_board()
+        game.make_move("black", [5, 4])
+        game.print_board()
+        self.assertEqual(game.get_board(), test1_answer)

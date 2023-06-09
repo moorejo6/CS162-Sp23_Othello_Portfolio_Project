@@ -111,7 +111,6 @@ class Othello:  # TODO: Check style guide lines for classes
                 if self._board[row][column] == "=":
                     self._board[row][column] = "."
 
-
     # Finished first draft on 6/9
     def create_player(self, player_name, color):
         """TODO: ADD DOCSTRING"""
@@ -146,6 +145,7 @@ class Othello:  # TODO: Check style guide lines for classes
 
         return winner_string
 
+    # Finished first draft on 6/9
     def return_available_positions(self, color):
         """TODO: ADD DOCSTRING"""
 
@@ -164,6 +164,7 @@ class Othello:  # TODO: Check style guide lines for classes
 
         return valid_move_list
 
+    # Finished first draft on 6/9
     def rec_return_available_positions(self, current_location, shift, player_piece, opponent_piece, value=None):
         """TODO: ADD DOCSTRING"""
 
@@ -185,6 +186,58 @@ class Othello:  # TODO: Check style guide lines for classes
         # Recursive case: We're following a trail of the opponent's pieces
         if adjacent_value == opponent_piece:
             return self.rec_return_available_positions(adjacent_space, shift, player_piece, opponent_piece, adjacent_value)
+
+    # Finished first draft on 6/9
+    def make_move(self, color, piece_position):
+        """TODO: ADD DOCSTRING"""
+
+        player_piece, opponent_piece = self.color_to_piece(color)
+        self._board[piece_position[0]][piece_position[1]] = player_piece
+        self.flip_pieces(color, piece_position)
+
+        return self._board
+
+    # Finished first draft on 6/2
+    def flip_pieces(self, color, piece_position):
+        """Starting from the given coordinate pair, this method will check for and perform valid flip moves in
+        all 8 adjacent directions"""
+
+        player_piece, opponent_piece = self.color_to_piece(color)
+
+        # Check every direction for valid pieces to flip
+        for shift in self._coordinate_shift:
+            self.rec_flip_pieces(piece_position, shift, player_piece, opponent_piece)
+
+    # Finished first draft 6/2
+    def rec_flip_pieces(self, piece_position, shift, player_piece, opponent_piece):
+        """TODO: ADD DOCSTRING"""
+
+        # Get the value of the adjacent space in the given direction
+        adjacent_space = [piece_position[0] + shift[0], piece_position[1] + shift[1]]
+        adjacent_value = self._board[adjacent_space[0]][adjacent_space[1]]
+
+        # Base case 1: We hit a wall. No valid flips.
+        if adjacent_value == "*":
+            return False
+
+        # Base case 2: We found an empty space. No valid flips
+        if adjacent_value == ".":
+            return False
+
+        # Base case 3: We found the current player's piece.
+        #              This indicates that we should flip the pieces we passed over.
+        if adjacent_value == player_piece:
+            return True
+
+        # Recursive case: We're following a trail of the opponent's pieces
+        if adjacent_value == opponent_piece:
+
+            # If we eventually find the current player's piece, we should flip the value on the board
+            if self.rec_flip_pieces(adjacent_space, shift, player_piece, opponent_piece):
+                self._board[adjacent_space[0]][adjacent_space[1]] = player_piece
+                return True
+            else:
+                return False
 
 
     # Finished first draft 6/4. Unit Tests implemented 6/4
@@ -228,54 +281,7 @@ class Othello:  # TODO: Check style guide lines for classes
         return piece_locations
 
     # Finished first draft 6/2
-    def flip_pieces(self, color, row, column):
-        """Takes three parameters:
-        color - The color of the current players pieces
-        row, column - the row,column coordinate pair for the staring location.
 
-        Purpose: Starting from the given coordinate pair, this method will check for and perform valid flip moves in
-        all 8 cardinal directions
-
-        Returns: nothing"""
-
-        player_piece, opponent_piece = self.color_to_piece(color)
-
-        # Check every direction for valid pieces to flip
-        for shift in self._coordinate_shift:
-            self.rec_flip_pieces(shift, player_piece, opponent_piece, row, column)
-
-    # Finished first draft 6/2
-    def rec_flip_pieces(self, shift, player_piece, opponent_piece, row, column):
-        """TODO: ADD DOCSTRING"""
-
-        # Get the value of the adjacent space in the given direction
-
-        adj_row = row + shift[0]
-        adj_column = column + shift[1]
-        adj_value = self._board[adj_row][adj_column]
-
-        # Base case 1: We hit a wall. No valid flips.
-        if adj_value == "*":
-            return False
-
-        # Base case 2: We found an empty space. No valid flips
-        if adj_value == ".":
-            return False
-
-        # Base case 3: We found the current player's piece.
-        #              This indicates that we should flip the pieces we passed over.
-        if adj_value == player_piece:
-            return True
-
-        # Recursive case: We're following a trail of the opponent's pieces
-        if adj_value == opponent_piece:
-
-            # If we eventually find the current player's piece, we should flip the value on the board
-            if self.rec_flip_pieces(shift, player_piece, opponent_piece, adj_row, adj_column):
-                self._board[adj_row][adj_column] = player_piece
-                return True
-            else:
-                return False
 
 
 
