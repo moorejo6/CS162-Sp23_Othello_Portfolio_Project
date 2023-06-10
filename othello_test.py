@@ -221,19 +221,19 @@ class OthelloUnitTests(unittest.TestCase):
         game.print_board()
         self.assertEqual(game.get_board(), test1_answer)
 
-    # def test_8_play_game(self):
-    #     """Tests the play_game() method"""
-    #
-    #     print("UNITTEST:: Running test_8_play_game()...")
-    #
-    #     game = Othello()
-    #
-    #     # Test an invalid move on the starting board
-    #     self.assertEqual(game.play_game("black", [1, 1]), "Invalid move")
-    #
-    #     # Remove valid moves from the board and try to move. The game should end here
-    #     game._board[4][4] = BLACK
-    #     game._board[5][5] = BLACK
-    #     answer_string = "Winner is black player: Player 1"
-    #
-    #     self.assertEqual(game.play_game("black", [2, 2]), answer_string)
+    def test_8_play_game(self):
+        """Tests the play_game() method"""
+
+        print("UNITTEST:: Running test_8_play_game()...")
+
+        game = Othello()
+
+        # Test an invalid move on the starting board
+        self.assertEqual(game.play_game("black", [1, 1]), "Invalid move")
+
+        # Remove valid moves from the board and try to move. The game should end here
+        game._board[4][4] = BLACK
+        game._board[5][5] = BLACK
+        answer_string = "Winner is black player: Player 1"
+
+        self.assertEqual(game.play_game("black", [2, 2]), answer_string)

@@ -205,7 +205,7 @@ class Othello:  # TODO: Check style guide lines for classes
                     return self.return_winner()
 
             else:
-                print("Here are the valid moves: ", player_valid_moves)
+                print("Here are the valid moves:", player_valid_moves)
                 return "Invalid move"
 
     # -------------------- Helper methods -------------------- #
@@ -352,51 +352,52 @@ class Othello:  # TODO: Check style guide lines for classes
         else:
             return False
 
+
 def game_loop():
     """TODO: ADD DOCSTRING"""
 
     game = Othello()
-    #
-    #     print("~~~~~~~~~~ OTHELLO ~~~~~~~~~~")
-    #     print("\nWelcome to Othello!\n")
-    #
-    #     playing = True
-    #     current_player = "black"
-    #
-    #     while playing:
-    #
-    #         game.print_available_positions(current_player)
-    #         valid_moves = game.return_available_positions(current_player)
-    #
-    #         valid_input = False
-    #
-    #         while not valid_input:
-    #
-    #             try:
-    #                 player_row = int(input(f"{current_player}'s turn. What row do you want to move to? "))
-    #                 player_column = int(input("What column do you want to move to? "))
-    #                 player_input = [player_row, player_column]
-    #
-    #                 if player_input in valid_moves:
-    #                     valid_input = True
-    #                     game.play_game(current_player, player_input)
-    #                 elif valid_moves == []:
-    #                     print("No moves available for", current_player)
-    #                     valid_input = True
-    #                 else:
-    #                     print("Invalid input. Valid moves are:", valid_moves)
-    #
-    #             except ValueError:
-    #                 print("Invalid input. No value entered.")
-    #                 pass
-    #
-    #         if current_player == "black":
-    #             current_player = "white"
-    #         else:
-    #             current_player = "black"
-    #
-    #         if len(game.return_available_positions("black")) == 0 and len(game.return_available_positions("white")) == 0:
-    #             playing = False
+
+    print("~~~~~~~~~~ OTHELLO ~~~~~~~~~~")
+    print("\nWelcome to Othello!\n")
+
+    playing = True
+    current_player = "black"
+
+    while playing:
+
+        game.print_available_positions(current_player)
+        valid_moves = game.return_available_positions(current_player)
+
+        valid_input = False
+
+        while not valid_input:
+
+            try:
+                player_row = int(input(f"{current_player}'s turn. What row do you want to move to? "))
+                player_column = int(input("What column do you want to move to? "))
+                player_input = [player_row, player_column]
+
+                if player_input in valid_moves:
+                    valid_input = True
+                    game.play_game(current_player, player_input)
+                elif valid_moves == []:
+                    print("No moves available for", current_player)
+                    valid_input = True
+                else:
+                    print("Invalid input. Valid moves are:", valid_moves)
+
+            except ValueError:
+                print("Invalid input. No value entered.")
+                pass
+
+        if current_player == "black":
+            current_player = "white"
+        else:
+            current_player = "black"
+
+        if len(game.return_available_positions("black")) == 0 and len(game.return_available_positions("white")) == 0:
+            playing = False
 
 
 def main():
