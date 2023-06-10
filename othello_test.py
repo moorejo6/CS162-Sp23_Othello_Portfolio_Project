@@ -16,8 +16,10 @@ WHITE = "O"
 class OthelloUnitTests(unittest.TestCase):
     """Contains unit tests for the othello game"""
 
-    def test_create_player(self):
+    def test_1_create_player(self):
         """Tests the crete_player() method"""
+
+        print("UNITTEST:: Running test_1_create_player()...")
 
         game = Othello()
 
@@ -43,8 +45,10 @@ class OthelloUnitTests(unittest.TestCase):
         self.assertEqual(players[1].get_name(), "new white player")
         self.assertEqual(players[1].get_color(), "white")
 
-    def test_return_winner(self):
+    def test_2_return_winner(self):
         """Tests the return_winner() method"""
+
+        print("UNITTEST:: Running test_2_return_winner()...")
 
         game = Othello()
 
@@ -62,8 +66,10 @@ class OthelloUnitTests(unittest.TestCase):
         game._board[7][8] = WHITE
         self.assertEqual(game.return_winner(), "Winner is white player: Player 2")
 
-    def test_return_available_positions(self):
+    def test_3_return_available_positions(self):
         """Contains unit tests for the return_available_positions() method"""
+
+        print("UNITTEST:: Running test_3_return_available_positions()...")
 
         game = Othello()
 
@@ -97,8 +103,10 @@ class OthelloUnitTests(unittest.TestCase):
         game.print_available_positions("black")
         self.assertEqual(game.return_available_positions("black"), test4_answer)
 
-    def test_color_to_piece(self):
+    def test_4_color_to_piece(self):
         """Tests the color_to_piece() method"""
+
+        print("UNITTEST:: Running test_4_color_to_piece()...")
 
         game = Othello()
         test_1_black, test_1_white = game.color_to_piece("black")
@@ -112,8 +120,10 @@ class OthelloUnitTests(unittest.TestCase):
         self.assertIsNone(test_3_none1)
         self.assertIsNone(test_3_none2)
 
-    def test_return_piece_locations(self):
+    def test_5_return_piece_locations(self):
         """Tests the return_piece_locations() method"""
+
+        print("UNITTEST:: Running test_5_return_piece_locations()...")
 
         game = Othello()
 
@@ -145,8 +155,10 @@ class OthelloUnitTests(unittest.TestCase):
         self.assertEqual(test3_scattered_black_pieces, test3_answer)
         self.assertEqual(test4_scattered_white_pieces, test4_answer)
 
-    def test_flip_pieces_all_directions(self):
+    def test_6_flip_pieces_all_directions(self):
         """Contains Unit tests for the flip_pieces() method"""
+
+        print("UNITTEST:: Running test_6_flip_pieces_all_directions()...")
 
         game = Othello()
 
@@ -182,8 +194,10 @@ class OthelloUnitTests(unittest.TestCase):
         game.print_board()
         self.assertEqual(game.get_board(), test2_answer_board)
 
-    def test_make_move(self):
+    def test_7_make_move(self):
         """Tests the make_move() method"""
+
+        print("UNITTEST:: Running test_7_make_move()...")
 
         game = Othello()
 
@@ -203,6 +217,23 @@ class OthelloUnitTests(unittest.TestCase):
         # Test results
         print(f"UNITTEST test_make_move: Board position test 1, black to place piece at [5,4]: ")
         game.print_board()
-        game.make_move("black", [5, 4])
+        game.make_move("black", (5, 4))
         game.print_board()
         self.assertEqual(game.get_board(), test1_answer)
+
+    # def test_8_play_game(self):
+    #     """Tests the play_game() method"""
+    #
+    #     print("UNITTEST:: Running test_8_play_game()...")
+    #
+    #     game = Othello()
+    #
+    #     # Test an invalid move on the starting board
+    #     self.assertEqual(game.play_game("black", [1, 1]), "Invalid move")
+    #
+    #     # Remove valid moves from the board and try to move. The game should end here
+    #     game._board[4][4] = BLACK
+    #     game._board[5][5] = BLACK
+    #     answer_string = "Winner is black player: Player 1"
+    #
+    #     self.assertEqual(game.play_game("black", [2, 2]), answer_string)
