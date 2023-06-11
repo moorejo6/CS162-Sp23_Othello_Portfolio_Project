@@ -165,6 +165,8 @@ class Othello:
                 if possible_move is not None and possible_move not in valid_move_list:
                     valid_move_list.append(possible_move)
 
+        # Sort the move list and return it
+        self.sort_coordinates(valid_move_list)
         return valid_move_list
 
     def make_move(self, color, piece_position):
@@ -362,6 +364,25 @@ class Othello:
         else:
             return False
 
+    def sort_coordinates(self, coordinate_list):
+        """Sorts lists of coordinates to match the order shown in gradescope tests. Uses the bubble sort algorithm from the
+        week 4 modules"""
+
+        # First, sort the coordinates by column value
+        for pass_num in range(len(coordinate_list) - 1):
+            for index in range(len(coordinate_list) - 1 - pass_num):
+                if coordinate_list[index][1] > coordinate_list[index + 1][1]:
+                    temp = coordinate_list[index]
+                    coordinate_list[index] = coordinate_list[index + 1]
+                    coordinate_list[index + 1] = temp
+
+        # Second, sort the coordinates by row value. Bubble sort is so nice, we need to use it twice!
+        for pass_num in range(len(coordinate_list) - 1):
+            for index in range(len(coordinate_list) - 1 - pass_num):
+                if coordinate_list[index][0] > coordinate_list[index + 1][0]:
+                    temp = coordinate_list[index]
+                    coordinate_list[index] = coordinate_list[index + 1]
+                    coordinate_list[index + 1] = temp
 
 def game_loop():
     """Used for testing. This lets two users play a game of Othello together."""
@@ -373,7 +394,7 @@ def game_loop():
     print("\nWelcome to Othello!\n")
 
     # Get each player's name and create Player objects for them
-    player_1_name = input("Player 1, you will play Black. What is your Name? ")
+    player_1_name = input("Player 1, you will play Black. What is your name? ")
     player_2_name = input("Player 2, you will play White. What is your name? ")
     game.create_player(player_1_name, "black")
     game.create_player(player_2_name, "white")
@@ -396,7 +417,7 @@ def game_loop():
                 # I ask for the row and column separately here so I don't have to parse the coordinates from a string
                 player_row = int(input(f"{current_player}'s turn. What row do you want to move to? "))
                 player_column = int(input("What column do you want to move to? "))
-                player_input = [player_row, player_column]
+                player_input = (player_row, player_column)
 
                 # If the input is valid, make the move
                 if player_input in valid_moves:
@@ -429,7 +450,7 @@ def game_loop():
 
 def main():
 
-    # Adding the playable game in main() for fun.
+    # Including the playable game in main() for fun.
     game_loop()
 
 
