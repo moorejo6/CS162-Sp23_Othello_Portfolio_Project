@@ -1,7 +1,8 @@
 # Author: Jordan Moore
 # GitHub username: moorejo6
 # Date: 5/15/23
-# Description: TODO: ADD DESCRIPTION
+# Description: Contains the classes and functions needed to play a game of Othello. The Othello class handles all player
+#              movements on the board, updates the board state as needed, and declares a winner when the game is over.
 # ---------------------------------------------------------------------------------------------------------------------------
 
 def generate_board(black_token_locations=None, white_token_locations=None):
@@ -18,7 +19,7 @@ def generate_board(black_token_locations=None, white_token_locations=None):
     if white_token_locations is None:
         white_token_locations = [[4, 4], [5, 5]]
 
-    # Generate the borders and empty spaces of the board
+    # Generate the board
     for row in range(10):
         board_row = []
 
@@ -57,7 +58,7 @@ class Player:
         return self._color
 
 
-class Othello:  # TODO: Check style guide lines for classes
+class Othello:
     """Represents a game of Othello. Contains methods and data members needed to store the game state, make moves for
     the players, update the game state, detect the end of the game, and declare a winner."""
 
@@ -68,7 +69,7 @@ class Othello:  # TODO: Check style guide lines for classes
         self._player_list = [Player("Player 1", "black"), Player("Player 2", "white")]
 
         # The coordinate shift represents the changes needed for a (row, column) pair to shift to an adjacent space.
-        # There are 8 shifts that represent movement in the 8 cardinal directions: N, NE, E, SE, S, SW, W, NE
+        # There are 8 shifts that represent movement in 8 directions: N, NE, E, SE, S, SW, W, NE
         self._coordinate_shift = [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]]
 
     def get_board(self):
@@ -147,7 +148,6 @@ class Othello:  # TODO: Check style guide lines for classes
 
         return winner_string
 
-    # Finished first draft on 6/9
     def return_available_positions(self, color):
         """Returns a list of the (row, column) coordinates for each valid move the player of the given color can make.
         Uses the recursive rec_return_available_positions() method to determine valid move locations."""
@@ -182,28 +182,37 @@ class Othello:  # TODO: Check style guide lines for classes
         return self._board
 
     def play_game(self, player_color, piece_position):
-        """TODO: ADD DOCSTRING"""
+        """Checks if the players move is valid and if the game is over. If the player's move is valid, the move is made and
+        the board is updated. If the player's move is invalid 'Invalid move' is returned. If the game is over. the winner
+        is declared via the return_winner() method."""
 
+        # First, check if the game is over before any moves are made
         if self.game_is_over():
+
+            # If it is, tally up each player's pieces and call return_winner()
             num_black_pieces = len(self.return_piece_locations("black"))
             num_white_pieces = len(self.return_piece_locations("white"))
-
             print("Game is ended white piece:", num_white_pieces, "black piece:", num_black_pieces)
+
             return self.return_winner()
 
+        # If the game isn't over yet, get a list of the valid move positions
         else:
             player_valid_moves = self.return_available_positions(player_color)
 
+            # If the position the player is moving to is in the valid move list, make the move
             if piece_position in player_valid_moves:
                 self.make_move(player_color, piece_position)
 
+                # If the game is over at this point, tally up the pieces and call return winner
                 if self.game_is_over:
                     num_black_pieces = len(self.return_piece_locations("black"))
                     num_white_pieces = len(self.return_piece_locations("white"))
-
                     print("Game is ended white piece:", num_white_pieces, "black piece:", num_black_pieces)
+
                     return self.return_winner()
 
+            # If the position the player is moving to is not in the valid move list,print the valid moves and return a string
             else:
                 print("Here are the valid moves:", player_valid_moves)
                 return "Invalid move"
@@ -211,7 +220,7 @@ class Othello:  # TODO: Check style guide lines for classes
     # -------------------- Helper methods -------------------- #
 
     def color_to_piece(self, color):
-        """Takes the given color and returns the symbols that represent that player's color and the opponent's color."""
+        """Takes the given color and returns the symbols that represent that player's pieces and the opponent's pieces."""
 
         player_piece = None
         opponent_piece = None
@@ -270,7 +279,7 @@ class Othello:  # TODO: Check style guide lines for classes
                     self._board[row][column] = "."
 
     def flip_pieces(self, color, piece_position):
-        """Starting from the given coordinate pair, this method will check for and perform valid flip moves in
+        """Starting from the given coordinate position, this method will check for and perform valid flip moves in
         all 8 adjacent directions using the recursive rec_flip_pieces() method."""
 
         # Get the pieces that represent the player and their opponent's colors
@@ -341,11 +350,13 @@ class Othello:  # TODO: Check style guide lines for classes
             return self.rec_return_available_positions(adjacent_space, shift, player_piece, opponent_piece, adjacent_value)
 
     def game_is_over(self):
-        """TODO: ADD DOCSTRING"""
+        """Determines if the game is over. Returns True if neither player has valid moves. Returns False otherwise."""
 
+        # Get a list of each player's avilable positions
         black_valid_moves = self.return_available_positions("black")
         white_valid_moves = self.return_available_positions("white")
 
+        # If both lists are empty, the game is over. Return True. Otherwise, return False
         if black_valid_moves == [] and white_valid_moves == []:
             return True
 
@@ -354,36 +365,50 @@ class Othello:  # TODO: Check style guide lines for classes
 
 
 def game_loop():
-    """TODO: ADD DOCSTRING"""
+    """Used for testing. This lets two users play a game of Othello together."""
 
     game = Othello()
 
     print("~~~~~~~~~~ OTHELLO ~~~~~~~~~~")
     print("\nWelcome to Othello!\n")
 
+    # Get each player's name and create Player objects for them
+    player_1_name = input("Player 1, you will play Black. What is your Name? ")
+    player_2_name = input("Player 2, you will play White. What is your name? ")
+    game.create_player(player_1_name, "black")
+    game.create_player(player_2_name, "white")
+
+    # Set starting variables for the gameplay loop
     playing = True
     current_player = "black"
 
     while playing:
 
+        # Print the board and check which moves the current player has available
         game.print_available_positions(current_player)
         valid_moves = game.return_available_positions(current_player)
 
+        # Get the movement input from the current player
         valid_input = False
-
         while not valid_input:
 
             try:
+                # I ask for the row and column separately here so I don't have to parse the coordinates from a string
                 player_row = int(input(f"{current_player}'s turn. What row do you want to move to? "))
                 player_column = int(input("What column do you want to move to? "))
                 player_input = [player_row, player_column]
 
+                # If the input is valid, make the move
                 if player_input in valid_moves:
                     valid_input = True
                     game.play_game(current_player, player_input)
+
+                # If the player has no valid moves, tell them and move to the next player.
                 elif valid_moves == []:
                     print("No moves available for", current_player)
                     valid_input = True
+
+                # Otherwise, the input was invalid. prompt the user for a new input
                 else:
                     print("Invalid input. Valid moves are:", valid_moves)
 
@@ -391,17 +416,20 @@ def game_loop():
                 print("Invalid input. No value entered.")
                 pass
 
+        # After we get a valid move, swap the current player.
         if current_player == "black":
             current_player = "white"
         else:
             current_player = "black"
 
+        # Check if the game is over. If it is, exit the main gameplay loop.
         if len(game.return_available_positions("black")) == 0 and len(game.return_available_positions("white")) == 0:
             playing = False
 
 
 def main():
-    # test_game_loop()
+
+    # Adding the playable game in main() for fun.
     game_loop()
 
 
