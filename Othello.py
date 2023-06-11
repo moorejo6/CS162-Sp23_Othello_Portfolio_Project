@@ -384,6 +384,7 @@ class Othello:
                     coordinate_list[index] = coordinate_list[index + 1]
                     coordinate_list[index + 1] = temp
 
+
 def game_loop():
     """Used for testing. This lets two users play a game of Othello together."""
 
