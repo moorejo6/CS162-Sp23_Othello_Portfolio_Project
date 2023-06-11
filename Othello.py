@@ -205,7 +205,7 @@ class Othello:
                 self.make_move(player_color, piece_position)
 
                 # If the game is over at this point, tally up the pieces and call return winner
-                if self.game_is_over:
+                if self.game_is_over():
                     num_black_pieces = len(self.return_piece_locations("black"))
                     num_white_pieces = len(self.return_piece_locations("white"))
                     print("Game is ended white piece:", num_white_pieces, "black piece:", num_black_pieces)
@@ -352,7 +352,7 @@ class Othello:
     def game_is_over(self):
         """Determines if the game is over. Returns True if neither player has valid moves. Returns False otherwise."""
 
-        # Get a list of each player's avilable positions
+        # Get a list of each player's available positions
         black_valid_moves = self.return_available_positions("black")
         white_valid_moves = self.return_available_positions("white")
 
@@ -368,8 +368,9 @@ def game_loop():
     """Used for testing. This lets two users play a game of Othello together."""
 
     game = Othello()
-
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("~~~~~~~~~~ OTHELLO ~~~~~~~~~~")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("\nWelcome to Othello!\n")
 
     # Get each player's name and create Player objects for them
