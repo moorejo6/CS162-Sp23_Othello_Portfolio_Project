@@ -323,7 +323,7 @@ class Othello:
         all valid move locations."""
 
         # Get the coordinates and value of the adjacent space in the given direction
-        adjacent_space = [current_location[0] + shift[0], current_location[1] + shift[1]]
+        adjacent_space = (current_location[0] + shift[0], current_location[1] + shift[1])
         adjacent_value = self._board[adjacent_space[0]][adjacent_space[1]]
 
         # Base case 1: We hit a wall. Not a valid move.

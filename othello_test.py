@@ -74,8 +74,8 @@ class OthelloUnitTests(unittest.TestCase):
         game = Othello()
 
         # Test starting locations
-        test1_answer = [[6, 5], [4, 3], [3, 4], [5, 6]]
-        test2_answer = [[4, 6], [6, 4], [3, 5], [5, 3]]
+        test1_answer = [(6, 5), (4, 3), (3, 4), (5, 6)]
+        test2_answer = [(4, 6), (6, 4), (3, 5), (5, 3)]
         self.assertEqual(game.return_available_positions("black"), test1_answer)
         self.assertEqual(game.return_available_positions("white"), test2_answer)
 
@@ -86,7 +86,7 @@ class OthelloUnitTests(unittest.TestCase):
         game._board = test3_board
 
         # Create the answer and test the results
-        test3_answer = [[3, 3], [2, 5], [4, 6], [6, 3], [2, 4], [5, 6], [5, 2]]
+        test3_answer = [(3, 3), (2, 5), (4, 6), (6, 3), (2, 4), (5, 6), (5, 2)]
         print(f"UNITTEST:: test_return_available_positions test 3 board (white to move):")
         game.print_available_positions("white")
         self.assertEqual(game.return_available_positions("white"), test3_answer)
@@ -98,7 +98,7 @@ class OthelloUnitTests(unittest.TestCase):
         game._board = test4_board
 
         # Create the answer and test the results
-        test4_answer = [[6, 6], [8, 5], [2, 7], [5, 6], [7, 6]]
+        test4_answer = [(6, 6), (8, 5), (2, 7), (5, 6), (7, 6)]
         print(f"UNITTEST:: test_return_available_positions test 4 board (black to move):")
         game.print_available_positions("black")
         self.assertEqual(game.return_available_positions("black"), test4_answer)
