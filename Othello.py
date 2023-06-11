@@ -7,7 +7,7 @@
 
 def generate_board(black_token_locations=None, white_token_locations=None):
     """Returns an Othello board with black and white tokens placed at the provided coordinates. If no coordinates are given,
-    pieces are placed at their starting location."""
+    pieces are placed at their starting location. Coordinates are only passed into this function for unit testing"""
 
     board = []
 
@@ -134,7 +134,6 @@ class Othello:
         # Get the player objects and initialize the winner_string
         black_player = self._player_list[0]
         white_player = self._player_list[1]
-        winner_string = ""
 
         # Determine the winner and return the winner_string
         if num_black_pieces > num_white_pieces:
@@ -414,7 +413,7 @@ def game_loop():
                     print("Invalid input. Valid moves are:", valid_moves)
 
             except ValueError:
-                print("Invalid input. No value entered.")
+                print("Invalid input.")
                 pass
 
         # After we get a valid move, swap the current player.
